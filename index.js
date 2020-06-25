@@ -26,11 +26,11 @@ function getBasicAuthorizationEncoded() {
  * @param {string} code Authorization code received using callback
  * @returns {string} Refresh token
  */
-const getRefreshToken = async code => {
+const getRefreshToken = async (code) => {
   const data = {
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: REDIRECT_URI
+    redirect_uri: REDIRECT_URI,
   }
   try {
     const result = await axios.post(
@@ -39,8 +39,8 @@ const getRefreshToken = async code => {
       {
         headers: {
           Authorization: `Basic ${getBasicAuthorizationEncoded()}`,
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       }
     )
     return result.data.refresh_token
@@ -59,10 +59,10 @@ const getRefreshToken = async code => {
  * @param {string} code Authorization code received using callback
  * @returns {string} Refresh token
  */
-const getIdToken = async refreshToken => {
+const getIdToken = async (refreshToken) => {
   const data = {
     grant_type: "refresh_token",
-    refresh_token: refreshToken
+    refresh_token: refreshToken,
   }
   try {
     const result = await axios.post(
@@ -71,8 +71,8 @@ const getIdToken = async refreshToken => {
       {
         headers: {
           Authorization: `Basic ${getBasicAuthorizationEncoded()}`,
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       }
     )
     return result.data.id_token
@@ -116,13 +116,16 @@ fastify.get("/callback", async (request, reply) => {
 // 3. Notify user that authorization was successful
 // 4. Do an example Manage api call with received token
 fastify.get("/success", async (request, reply) => {
-  const apiCall = `https://${MANAGE_API_URL}/site/sites`
-  console.log(`apiCall: ${apiCall}`)
+  const callUrl = `https://${MANAGE_API_URL}/site/sites?foo=bar`
   let response
 
   try {
-    const axiosConfig = { headers: { Authorization: idToken } }
-    response = await axios.get(apiCall, axiosConfig)
+    const axiosConfig = {
+      headers: { Authorization: idToken },
+      // Never throw, we simply want to print the response
+      validateStatus: (status) => true,
+    }
+    response = await axios.get(callUrl, axiosConfig)
 
     const dataStr = JSON.stringify(response.data)
     console.log(
@@ -139,10 +142,10 @@ fastify.get("/success", async (request, reply) => {
     <html><body>
       <h1>Log</h1>
       <h2>Authentication</h2>
-      Successful
+      Authentication successful
       <h2>Request</h2>
       <b>Method:</b> <tt>GET</tt><br>
-      <b>Url:</b> <tt>${apiCall}</tt>
+      <b>Url:</b> <tt>${callUrl}</tt>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${JSON.stringify(response.data)}</tt><br>
