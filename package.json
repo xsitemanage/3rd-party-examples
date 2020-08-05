@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "*",
     "dotenv": "^8.2.0",
-    "fastify": "^2.14.1",
+    "fastify": "^2.15.1",
     "nodemon": "*",
     "querystring": "*"
   }
