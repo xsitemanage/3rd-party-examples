@@ -12,6 +12,7 @@
     "axios": "*",
     "dotenv": "^8.2.0",
     "fastify": "^2.15.1",
+    "node-htmlencode": "^0.0.1",
     "nodemon": "*",
     "querystring": "*"
   }

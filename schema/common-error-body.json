@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["error"],
+  "properties": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "date"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Currently always NoError"
+        },
+        "code": {
+          "type": "string",
+          "description": "Application error code. Can be used to detect detailed error type"
+        },
+        "message": {
+          "type": "string",
+          "description": "Human readable error description"
+        },
+        "requestId": {
+          "type": "string",
+          "description": "Id of the processed request, can be used when communicating with product support"
+        }
+      }
+    }
+  }
+}

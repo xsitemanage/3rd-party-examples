@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["sites"],
+  "properties": {
+    "sites": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": ["siteId", "name", "uiLongitude", "uiLatitude"],
+        "properties": {
+          "siteId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique site identifier within Xsite® MANAGE"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the site"
+          },
+          "uiLongitude": {
+            "type": "number",
+            "description": "Approximate longitude coordinate of the position of the site. For Xsite® MANAGE UI, not for measurements or machine control systems. In WGS84"
+          },
+          "uiLatitude": {
+            "type": "number",
+            "description": "Approximate latitude coordinate of the position of the site. For Xsite® MANAGE UI, not for measurements or machine control systems. In WGS84"
+          }
+        }
+      }
+    },
+    "next": {
+      "type": "string",
+      "description": "Next page URL. Last page if not available"
+    }
+  }
+}
