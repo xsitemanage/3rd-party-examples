@@ -35,8 +35,8 @@ Application error response body: `schema/common-error-body.json`. Please note th
 ### Paging
 Api endpoints thay may return large set of results may implement paging. In
 case there are too many results to fit in a single response, such api includes
-field `lastEvaluatedKey` in its response. The next page is fetched by sending
-the received value back in a field with the same name `lastEvaluatedKey`.
+field `nextToken` in its response. The next page is fetched by sending
+the received value back in a field with the same name `nextToken`.
 
 Note that any endpoint listed here are supporting paging may change its maximum
 page size in the future. Some apis are initially implemented with huge page
@@ -44,11 +44,11 @@ size (meaning no paging in effect), but it may be decreased in the future.
 
 ## API endpoints
 
-#### GET https://api.xsitemanage.com/ext/0/site/sites?lastEvaluatedKey={lastEvaluatedKey}&maxPageSize={maxPageSize}
+#### GET https://api.xsitemanage.com/ext/0/site/sites?nextToken={nextToken}&maxPageSize={maxPageSize}
 Get user's sites
 
 Parameters
-- lastEvaluatedKey: Optional. For paging. Only used if given by an API response
+- nextToken: Optional. For paging. Only used if given by an API response
 - maxPageSize: Optional. For paging. A page will not contain more items that the given value
 
 Response: `schema/sites-get-response.json`
@@ -62,7 +62,8 @@ Parameters
 Response: Http status code only
 
 #### PUT https://api.xsitemanage.com/ext/0/site/protection
-Configure site file protection
+Configure site file protection. This should be set right after setting up the sync and creating the folder to which sync the data.
+This should be unset before disconnecting the sync
 
 Parameters
 - siteId: site id (string, uuid)
@@ -70,22 +71,23 @@ Parameters
 
 Response: `schema/protection-put-response.json`
 
-#### GET https://api.xsitemanage.com/ext/0/point/points?siteId={siteId}&lastEvaluatedKey={lastEvaluatedKey}&maxPageSize={maxPageSize}
+#### GET https://api.xsitemanage.com/ext/0/point/points?siteId={siteId}&since={sequenceId}&nextToken={nextToken}&maxPageSize={maxPageSize}
 Get log points for a site
 
 Parameters
 - siteId: site id (string, uuid)
-- lastEvaluatedKey: Optional. For paging. Only used if given by an API response
+- since: Optional. List items after sequenceId. Excludes given sequenceId from the list
+- nextToken: Optional. For paging. Only used if given by an API response
 - maxPageSize: Optional. For paging. A page will not contain more items that the given value
 
 Response: `schema/points-get-response.json`
 
-#### GET https://api.xsitemanage.com/ext/0/model/latest?siteId={siteId}&lastEvaluatedKey={lastEvaluatedKey}&maxPageSize={maxPageSize}
+#### GET https://api.xsitemanage.com/ext/0/model/latest?siteId={siteId}&nextToken={nextToken}&maxPageSize={maxPageSize}
 Get site files
 
 Parameters
 - siteId: site id (string, uuid)
-- lastEvaluatedKey: Optional. For paging. Only used if given by an API response
+- nextToken: Optional. For paging. Only used if given by an API response
 - maxPageSize: Optional. For paging. A page will not contain more items that the given value
 
 Response: `schema/model-get-response.json`

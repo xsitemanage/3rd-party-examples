@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["siteVersion", "files"],
+  "required": ["siteVersion", "items"],
   "properties": {
     "siteVersion": {
       "type": "integer"
     },
-    "files": {
+    "items": {
       "type": "array",
       "minItems": 0,
       "items": {
@@ -47,14 +47,14 @@
           },
           "type": {
             "type": "string",
-            "enum": [ "file", "folder" ]
+            "enum": ["file", "folder"]
           }
         }
       }
     },
-    "next": {
-      "type": "integer",
-      "description": ""
+    "nextToken": {
+      "type": "string",
+      "description": "Paging token"
     }
   }
 }

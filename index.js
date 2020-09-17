@@ -140,6 +140,8 @@ fastify.get("/success", async (request, reply) => {
 fastify.get("/list", async (request, reply) => {
   let response
   let callUrl
+  const maxPageSize = request.query.maxPageSize || 5
+  const nextToken = request.query.nextToken
 
   try {
     const axiosConfig = {
@@ -148,7 +150,9 @@ fastify.get("/list", async (request, reply) => {
       validateStatus: () => true,
     }
 
-    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/site/sites`
+    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/site/sites?maxPageSize=${maxPageSize}`
+    if (nextToken) callUrl += `&nextToken=${nextToken}`
+
     response = await axios.get(callUrl, axiosConfig)
 
     const dataStr = JSON.stringify(response.data)
@@ -162,7 +166,7 @@ fastify.get("/list", async (request, reply) => {
   }
 
   let siteTableRows = ""
-  for (const site of response.data.sites) {
+  for (const site of response.data.items) {
     siteTableRows += `<tr>
       <td>${site.siteId}</td>
       <td>${site.name}</td>
@@ -172,6 +176,11 @@ fastify.get("/list", async (request, reply) => {
       <td><a href="protection?siteId=${site.siteId}">Protect some files</a></td>
     </tr>`
   }
+
+  let nextPage = ""
+  if (response.data.nextToken)
+    nextPage = `<br>
+  <a href="list?nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Next sites</a>`
 
   reply.type("text/html")
   return `
@@ -192,6 +201,7 @@ fastify.get("/list", async (request, reply) => {
         </tr>
         ${siteTableRows}
       </table>
+      ${nextPage}
       <h2>Actions</h2>
       <a href="list">List sites</a>
       <h2>Response</h2>
@@ -243,7 +253,8 @@ fastify.get("/allowed", async (request, reply) => {
 
 fastify.get("/points", async (request, reply) => {
   const siteId = request.query.siteId
-  const next = request.query.next
+  const nextToken = request.query.nextToken
+  const maxPageSize = request.query.maxPageSize || 5
   let response
   let callUrl
 
@@ -255,8 +266,8 @@ fastify.get("/points", async (request, reply) => {
     }
 
     callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/point/points?siteId=${siteId}`
-    if (request.query.next) callUrl += `&next=${next}`
-
+    if (request.query.nextToken) callUrl += `&nextToken=${nextToken}`
+    callUrl += `&maxPageSize=${maxPageSize}`
     response = await axios.get(callUrl, axiosConfig)
 
     const dataStr = JSON.stringify(response.data)
@@ -269,11 +280,13 @@ fastify.get("/points", async (request, reply) => {
     throw new Error(msg)
   }
 
-  const { points, next: newNext } = response.data
+  const points = response.data.items
   const sequenceIds = points.map((p) => p.sequenceId)
   const minSequenceId = Math.min(...sequenceIds)
   const maxSequenceId = Math.max(...sequenceIds)
-
+  let nextPage = ""
+  if (response.data.nextToken)
+    nextPage = `<a href="points?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Get next page</a>`
   reply.type("text/html")
   return `
     <html><body>
@@ -285,7 +298,7 @@ fastify.get("/points", async (request, reply) => {
       <b>Count:</b> ${points.length}<br>
       <b>Min sequence id:</b> ${minSequenceId}<br>
       <b>Max sequence id:</b> ${maxSequenceId}<br>
-      <a href="points?siteId=${siteId}&next=${newNext}">Get next page</a>
+      ${nextPage}
       <h2>Actions</h2>
       <a href="list">List sites</a>
       <h2>Response</h2>
@@ -296,6 +309,8 @@ fastify.get("/points", async (request, reply) => {
 
 fastify.get("/files", async (request, reply) => {
   const siteId = request.query.siteId
+  const maxPageSize = request.query.maxPageSize || 5
+  const nextToken = request.query.nextToken
   let response
   let callUrl
 
@@ -307,7 +322,8 @@ fastify.get("/files", async (request, reply) => {
     }
 
     callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/model/latest?siteId=${siteId}`
-
+    if (maxPageSize) callUrl = callUrl + `&maxPageSize=${maxPageSize}`
+    if (nextToken) callUrl = callUrl + `&nextToken=${nextToken}`
     response = await axios.get(callUrl, axiosConfig)
 
     const dataStr = JSON.stringify(response.data)
@@ -320,7 +336,7 @@ fastify.get("/files", async (request, reply) => {
     throw new Error(msg)
   }
 
-  const files = response.data.files
+  const files = response.data.items
   const totalSize = files.reduce((total, file) => total + (file.size || 0), 0)
 
   let fileTableRows = ""
@@ -339,7 +355,11 @@ fastify.get("/files", async (request, reply) => {
   }
 
   const newPath = Date.now()
+  let nextPage = ""
 
+  if (response.data.nextToken)
+    nextPage = `<br>
+    <a href="files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Get next page</a>`
   reply.type("text/html")
   return `
     <html><body>
@@ -363,6 +383,7 @@ fastify.get("/files", async (request, reply) => {
         </tr>
         ${fileTableRows}
       </table>
+      ${nextPage}
       <h2>Actions</h2>
       <a href="presign?siteId=${siteId}&path=${newPath}">Upload new file with name ${newPath}</a><br>
       <a href="list">List sites</a>
