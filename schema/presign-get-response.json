@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["url", "contentType", "requestId", "path"],
+  "properties": {
+    "url": {
+      "type": "string",
+      "description": "Upload url for the file"
+    },
+    "contentType": {
+      "type": "string",
+      "description": "Content type that must be used when uploading the file"
+    },
+    "requestId": {
+      "type": "string",
+      "description": "Presign request id. Needed when performing the 'add file' command after upload"
+    },
+    "path": {
+      "type": "string",
+      "description": "Same as input path"
+    }
+  }
+}

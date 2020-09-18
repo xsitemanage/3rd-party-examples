@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["siteVersion", "items"],
+  "properties": {
+    "siteVersion": {
+      "type": "integer"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": [
+          "downloadUrl",
+          "path",
+          "version",
+          "timestampMs",
+          "userId",
+          "type"
+        ],
+        "properties": {
+          "downloadUrl": {
+            "type": "string",
+            "description": "Download url"
+          },
+          "path": {
+            "type": "string",
+            "description": "Path in project model hierarchy"
+          },
+          "version": {
+            "type": "integer",
+            "description": "File version number. Increasing, but not necessarily continuous."
+          },
+          "timestampMs": {
+            "type": "integer",
+            "description": "Timestamp in milliseconds since epoch"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Id of user that saved the file"
+          },
+          "size": {
+            "type": "integer",
+            "description": "File size in bytes. Not returned for folders."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["file", "folder"]
+          }
+        }
+      }
+    },
+    "nextToken": {
+      "type": "string",
+      "description": "Paging token"
+    }
+  }
+}
