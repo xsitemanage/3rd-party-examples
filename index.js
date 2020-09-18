@@ -170,10 +170,9 @@ fastify.get("/list", async (request, reply) => {
     siteTableRows += `<tr>
       <td>${site.siteId}</td>
       <td>${site.name}</td>
-      <td><a href="allowed?siteId=${site.siteId}">Check permissions</a></td>
       <td><a href="points?siteId=${site.siteId}">List points</a></td>
       <td><a href="files?siteId=${site.siteId}">List files</a></td>
-      <td><a href="protection?siteId=${site.siteId}">Protect some files</a></td>
+      <td><a href="protection?siteId=${site.siteId}">Enable for protectedFolder/ as companyName</a></td>
     </tr>`
   }
 
@@ -194,55 +193,13 @@ fastify.get("/list", async (request, reply) => {
         <tr>
           <th>Id</th>
           <th>Name</th>
-          <th>Check permissions</th>
           <th>List points</th>
           <th>List files</th>
-          <th>Protect some files</th>
+          <th>Directory protection</th>
         </tr>
         ${siteTableRows}
       </table>
       ${nextPage}
-      <h2>Actions</h2>
-      <a href="list">List sites</a>
-      <h2>Response</h2>
-      <b>Response http status code</b>: <tt>${response.status}</tt><br>
-      <b>Response data</b>: <tt>${htmlEncode(response.data)}</tt><br>
-    </body></html>`
-})
-
-fastify.get("/allowed", async (request, reply) => {
-  const siteId = request.query.siteId
-  let response
-  let callUrl
-
-  try {
-    const axiosConfig = {
-      headers: { Authorization: idToken },
-      // Never throw, we simply want to print the response
-      validateStatus: () => true,
-    }
-
-    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/site/allowed?siteId=${siteId}`
-
-    response = await axios.get(callUrl, axiosConfig)
-
-    const dataStr = JSON.stringify(response.data)
-    console.log(
-      `Manage sites call response: Http status code: ${response.status}, Data: ${dataStr}`
-    )
-  } catch (err) {
-    const msg = `Error during Manage api call: ${err}`
-    console.log(msg)
-    throw new Error(msg)
-  }
-
-  reply.type("text/html")
-  return `
-    <html><body>
-      <h1>Check permission for site ${siteId}</h1>
-      <h2>Request</h2>
-      <b>Method:</b> <tt>GET</tt><br>
-      <b>Url:</b> <tt>${callUrl}</tt>
       <h2>Actions</h2>
       <a href="list">List sites</a>
       <h2>Response</h2>
@@ -429,7 +386,7 @@ fastify.get("/protection", async (request, reply) => {
   reply.type("text/html")
   return `
     <html><body>
-      <h1>Protected some files for ${siteId}</h1>
+      <h1>Set directory protection for site ${siteId}</h1>
       <h2>Request</h2>
       <b>Method:</b> <tt>PUT</tt><br>
       <b>Url:</b> <tt>${callUrl}</tt><br>

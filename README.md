@@ -53,16 +53,8 @@ Parameters
 
 Response: `schema/sites-get-response.json`
 
-#### GET https://api.xsitemanage.com/ext/0/site/allowed?siteId={siteId}
-Check if caller has permissions for given site.
-
-Parameters
-- siteId: site id (string, uuid)
-
-Response: Http status code only
-
 #### PUT https://api.xsitemanage.com/ext/0/site/protection
-Configure site file protection. This should be set right after setting up the sync and creating the folder to which sync the data.
+Configure site directory protection. This should be set right after setting up the sync and creating the folder to which sync the data.
 This should be unset before disconnecting the sync
 
 Parameters
