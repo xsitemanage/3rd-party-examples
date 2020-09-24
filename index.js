@@ -246,7 +246,7 @@ fastify.get("/points", async (request, reply) => {
   const maxSequenceId = Math.max(...sequenceIds)
   let nextPage = ""
   if (response.data.nextToken)
-    nextPage = `<a href="points?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}&since=${since}">Get next page</a><br/>`
+    nextPage = `<a href="points?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}&since=${since || 0}">Get next page</a><br/>`
   reply.type("text/html")
   return `
     <html><body>
