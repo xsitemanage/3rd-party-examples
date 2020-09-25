@@ -172,14 +172,14 @@ fastify.get("/list", async (request, reply) => {
       <td>${site.name}</td>
       <td><a href="points?siteId=${site.siteId}">List points</a></td>
       <td><a href="files?siteId=${site.siteId}">List files</a></td>
-      <td><a href="protection?siteId=${site.siteId}">Enable for protectedFolder/ as companyName</a></td>
+      <td><a href="protection?siteId=${site.siteId}">For protectedFolder/ as companyName</a></td>
+      <td><a href="protection?siteId=${site.siteId}&disable=true">For protectedFolder/</a></td>
     </tr>`
   }
 
   let nextPage = ""
   if (response.data.nextToken)
-    nextPage = `<br>
-  <a href="list?nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Next sites</a>`
+    nextPage = `<a href="list?nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Next sites</a><br/>`
 
   reply.type("text/html")
   return `
@@ -195,12 +195,13 @@ fastify.get("/list", async (request, reply) => {
           <th>Name</th>
           <th>List points</th>
           <th>List files</th>
-          <th>Directory protection</th>
+          <th>Enable protection</th>
+          <th>Disable protection</th>
         </tr>
         ${siteTableRows}
       </table>
-      ${nextPage}
       <h2>Actions</h2>
+      ${nextPage}
       <a href="list">List sites</a>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
@@ -211,6 +212,7 @@ fastify.get("/list", async (request, reply) => {
 fastify.get("/points", async (request, reply) => {
   const siteId = request.query.siteId
   const nextToken = request.query.nextToken
+  const since = request.query.since
   const maxPageSize = request.query.maxPageSize || 5
   let response
   let callUrl
@@ -225,6 +227,7 @@ fastify.get("/points", async (request, reply) => {
     callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/point/points?siteId=${siteId}`
     if (request.query.nextToken) callUrl += `&nextToken=${nextToken}`
     callUrl += `&maxPageSize=${maxPageSize}`
+    if (request.query.since) callUrl += `&since=${since}`
     response = await axios.get(callUrl, axiosConfig)
 
     const dataStr = JSON.stringify(response.data)
@@ -243,7 +246,7 @@ fastify.get("/points", async (request, reply) => {
   const maxSequenceId = Math.max(...sequenceIds)
   let nextPage = ""
   if (response.data.nextToken)
-    nextPage = `<a href="points?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Get next page</a>`
+    nextPage = `<a href="points?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}&since=${since || 0}">Get next page</a><br/>`
   reply.type("text/html")
   return `
     <html><body>
@@ -255,8 +258,9 @@ fastify.get("/points", async (request, reply) => {
       <b>Count:</b> ${points.length}<br>
       <b>Min sequence id:</b> ${minSequenceId}<br>
       <b>Max sequence id:</b> ${maxSequenceId}<br>
-      ${nextPage}
       <h2>Actions</h2>
+      ${nextPage}
+      <a href="points?siteId=${siteId}&since=1">Get points since sequenceId 1</a><br/>
       <a href="list">List sites</a>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
@@ -316,7 +320,7 @@ fastify.get("/files", async (request, reply) => {
 
   if (response.data.nextToken)
     nextPage = `<br>
-    <a href="files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Get next page</a>`
+    <a href="files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Get next page</a><br/>`
   reply.type("text/html")
   return `
     <html><body>
@@ -340,9 +344,9 @@ fastify.get("/files", async (request, reply) => {
         </tr>
         ${fileTableRows}
       </table>
-      ${nextPage}
       <h2>Actions</h2>
-      <a href="presign?siteId=${siteId}&path=${newPath}">Upload new file with name ${newPath}</a><br>
+      ${nextPage}
+      <a href="presign?siteId=${siteId}&path=${newPath}">Upload new file with name ${newPath}</a><br/>
       <a href="list">List sites</a>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
@@ -352,6 +356,7 @@ fastify.get("/files", async (request, reply) => {
 
 fastify.get("/protection", async (request, reply) => {
   const siteId = request.query.siteId
+  const disable = request.query.disable === "true"
 
   let response
   let callUrl
@@ -365,12 +370,17 @@ fastify.get("/protection", async (request, reply) => {
     }
 
     callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/site/protection`
-    callBody = {
-      siteId,
-      protection: {
-        prefixes: { "protectedFolder/": "companyName" },
-      },
-    }
+    callBody = disable
+      ? {
+          siteId,
+          protection: {},
+        }
+      : {
+          siteId,
+          protection: {
+            prefixes: { "protectedFolder/": "companyName" },
+          },
+        }
     response = await axios.put(callUrl, callBody, axiosConfig)
 
     const dataStr = JSON.stringify(response.data)
