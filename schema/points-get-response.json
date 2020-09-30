@@ -69,6 +69,11 @@
             "description": "Type of the measurement equipment",
             "example": "Excavator"
           },
+          "name": {
+            "type": "string",
+            "description": "Name given for the logpoint",
+            "example": "well_1"
+          },
           "description": {
             "type": "string",
             "description": "Description given for the point",
@@ -77,6 +82,11 @@
           "surfaceCode": {
             "type": "string",
             "description": "Surface code from the IM design"
+          },
+          "lineId": {
+            "type": "string",
+            "description": "This point (in part) describes the line with this lineId",
+            "example": "0123"
           },
           "simulated": {
             "type": "boolean",
