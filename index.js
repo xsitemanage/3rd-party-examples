@@ -41,9 +41,11 @@ async function callTokenEndpoint(data) {
   const headers = {
     "Content-Type": "application/x-www-form-urlencoded",
   }
-  if (CLIENT_SECRET)
+  if (CLIENT_SECRET) {
     headers.Authorization = `Basic ${getBasicAuthorizationEncoded()}`
-  else data.client_id = CLIENT_ID
+  } else {
+    data.client_id = CLIENT_ID
+  }
   try {
     const result = await axios.post(
       `https://${AUTH_DOMAIN}/oauth2/token`,
