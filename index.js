@@ -31,6 +31,38 @@ function htmlEncode(object) {
 function getBasicAuthorizationEncoded() {
   return Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64")
 }
+
+/**
+ * Calls Cognito TOKEN endpoint. Takes care of client_id parameter in body
+ * and Authorization header using CLIENT_ID and CLIENT_SECRET
+ * @param {*} data body to send
+ */
+async function callTokenEndpoint(data) {
+  const headers = {
+    "Content-Type": "application/x-www-form-urlencoded",
+  }
+  if (CLIENT_SECRET)
+    headers.Authorization = `Basic ${getBasicAuthorizationEncoded()}`
+  else data.client_id = CLIENT_ID
+  try {
+    const result = await axios.post(
+      `https://${AUTH_DOMAIN}/oauth2/token`,
+      stringify(data),
+      {
+        headers,
+      }
+    )
+    return result.data
+  } catch (err) {
+    console.log(
+      `HTTP(S) error: '${err.message}'. Http status: '${
+        err.response.status
+      }'. Data: '${JSON.stringify(err.response.data)}'`
+    )
+    throw new Error("Error while fetching tokens")
+  }
+}
+
 /**
  * Exchange authorization code for refresh token
  * @param {string} code Authorization code received using callback
@@ -42,26 +74,8 @@ const getRefreshToken = async (code) => {
     code: code,
     redirect_uri: REDIRECT_URI,
   }
-  try {
-    const result = await axios.post(
-      `https://${AUTH_DOMAIN}/oauth2/token`,
-      stringify(data),
-      {
-        headers: {
-          Authorization: `Basic ${getBasicAuthorizationEncoded()}`,
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    )
-    return result.data.refresh_token
-  } catch (err) {
-    console.log(
-      `HTTP(S) error: '${err.message}'. Http status: '${
-        err.response.status
-      }'. Data: '${JSON.stringify(err.response.data)}'`
-    )
-    throw new Error("Error while fetching tokens")
-  }
+  const tokens = await callTokenEndpoint(data)
+  return tokens.refresh_token
 }
 
 /**
@@ -74,26 +88,8 @@ const getIdToken = async (refreshToken) => {
     grant_type: "refresh_token",
     refresh_token: refreshToken,
   }
-  try {
-    const result = await axios.post(
-      `https://${AUTH_DOMAIN}/oauth2/token`,
-      stringify(data),
-      {
-        headers: {
-          Authorization: `Basic ${getBasicAuthorizationEncoded()}`,
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    )
-    return result.data.id_token
-  } catch (err) {
-    console.log(
-      `HTTP(S) error: '${err.message}'. Http status: '${
-        err.response.status
-      }'. Data: '${JSON.stringify(err.response.data)}'`
-    )
-    throw new Error("Error while fetching tokens")
-  }
+  const tokens = await callTokenEndpoint(data)
+  return tokens.id_token
 }
 
 // 1. Forward requests to authentication UI
