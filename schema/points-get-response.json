@@ -13,9 +13,6 @@
           "siteId",
           "timestampMs",
           "localId",
-          "x",
-          "y",
-          "z",
           "sequenceId",
           "remoteId",
           "abandoned"
@@ -88,9 +85,112 @@
             "description": "This point (in part) describes the line with this lineId",
             "example": "0123"
           },
+          "groupId": {
+            "type": "string",
+            "description": "GroupId of the StringLineLayer"
+          },
+          "fillDepth": {
+            "type": "number",
+            "description": "Fill depth of the layer which has been filled and densified on this round"
+          },
+          "centerLine": {
+            "description": "CenterLine of the StringLineLayer",
+            "type": "string"
+          },
           "simulated": {
             "type": "boolean",
             "description": "If logpoint was created via simulation"
+          },
+          "type": {
+            "type": "string",
+            "description": "Object type information",
+            "enum": [
+              "SurveyPoint",
+              "SurveyLinePoint",
+              "AsbuiltPoint",
+              "AsbuiltLinePoint",
+              "AsbuiltSurfacePoint",
+              "ControlPoint",
+              "UserPoint",
+              "UserLinePoint",
+              "UserMeshPoint",
+              "OffsetPoint",
+              "OffsetLinePoint",
+              "OffsetMeshPoint",
+              "UserStringLineLayer",
+              "OffsetStringLineLayer"
+            ],
+            "example": "SurveyPoint"
+          },
+          "lineNames": {
+            "description": "The names (lineIds) which make up the StringLineLayer",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "accuracy": {
+            "type": "object",
+            "properties": {
+              "h": {
+                "description": "Horizontal accuracy",
+                "type": "number"
+              },
+              "v": {
+                "description": "Vertical accuracy",
+                "type": "number"
+              }
+            }
+          },
+          "ref": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name of the reference object",
+                "type":"string"
+              },
+              "filePath": {
+                  "description": "Path and filename of the file which was in use when measuring this point",
+                  "type":"string"
+              },
+              "code": {
+                "description": "IM code for the log point",
+                "type": "string"
+              },
+              "dz": {
+                "description": "Height difference to the reference object",
+                "type": "number"
+              },
+              "dh": {
+                "description": "Horizontal distance to the reference object",
+                "type": "number"
+              }
+            }
+          },
+          "refRefLine": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name of the reference object",
+                "type":"string"
+              },
+              "filePath": {
+                "description": "Path and filename of the file which was in use when measuring this point",
+                "type":"string"
+              },
+              "station": {
+                "description": "Position along the measurement line / Linear Referencing System milepost",
+                "type": "number"
+              },
+              "ds": {
+                "description": "Side distance to the measurement line",
+                "type": "number"
+              }
+            }
+          },
+          "siteVersion": {
+            "description": "Site version (site files version) of the file which was in use when measuring this point",
+            "type": "number"
           }
         }
       }
