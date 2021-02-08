@@ -93,8 +93,8 @@
             "type": "number",
             "description": "Fill depth of the layer which has been filled and densified on this round"
           },
-          "centerLine": {
-            "description": "CenterLine of the StringLineLayer",
+          "centerLineId": {
+            "description": "The lineId of center line of the StringLineLayer",
             "type": "string"
           },
           "simulated": {
@@ -122,8 +122,8 @@
             ],
             "example": "SurveyPoint"
           },
-          "lineNames": {
-            "description": "The names (lineIds) which make up the StringLineLayer",
+          "lineIds": {
+            "description": "The lineIds which make up the StringLineLayer",
             "type": "array",
             "items": {
               "type": "string"
