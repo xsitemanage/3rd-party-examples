@@ -1,0 +1,6 @@
+{
+  "queryStringParameters": {
+    "maxPageSize": "intergerAsString",
+    "nextToken": "string"
+  }
+}

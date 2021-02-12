@@ -1,0 +1,7 @@
+{
+  "body": {
+    "siteId": "uuid",
+    "presignRequestId": "string",
+    "path": "string"
+  }
+}

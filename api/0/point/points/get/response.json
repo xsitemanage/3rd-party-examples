@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": [
+          "machineId",
+          "siteId",
+          "timestampMs",
+          "localId",
+          "x",
+          "y",
+          "z",
+          "sequenceId",
+          "remoteId",
+          "abandoned"
+        ],
+        "properties": {
+          "machineId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timestampMs": {
+            "type": "integer",
+            "description": "Timestamp in milliseconds since epoch"
+          },
+          "localId": {
+            "type": "integer",
+            "description": "Local id for the log point of the Machine Control System"
+          },
+          "x": {
+            "type": "number",
+            "description": "Longitude coordinate of the position of the machine at the time of event. In WGS84"
+          },
+          "y": {
+            "type": "number",
+            "description": "Latitude coordinate of the position of the machine at the time of event. In WGS84"
+          },
+          "z": {
+            "type": "number"
+          },
+          "sequenceId": {
+            "description": "Sequence id of the change event. Assigns strictly ascending order to changes on a site. First event number is 1.",
+            "type": "integer"
+          },
+          "remoteId": {
+            "type": "integer",
+            "description": "Logpoint id assigned by the cloud service"
+          },
+          "abandoned": {
+            "type": "boolean",
+            "description": "Logpoint id assigned by Manage"
+          },
+          "code": {
+            "type": "string",
+            "description": "IM code for the log point"
+          },
+          "machineType": {
+            "type": "string",
+            "description": "Type of the measurement equipment",
+            "example": "Excavator"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name given for the logpoint",
+            "example": "well_1"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description given for the point",
+            "example": "Excavator"
+          },
+          "surfaceCode": {
+            "type": "string",
+            "description": "Surface code from the IM design"
+          },
+          "lineId": {
+            "type": "string",
+            "description": "This point (in part) describes the line with this lineId",
+            "example": "0123"
+          },
+          "simulated": {
+            "type": "boolean",
+            "description": "If logpoint was created via simulation"
+          }
+        }
+      }
+    },
+    "nextToken": {
+      "type": "string",
+      "description": "Paging token"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "queryStringParameters": {
+    "siteId": "uuid",
+    "since": "intergerAsString",
+    "maxPageSize": "intergerAsString",
+    "nextToken": "string"
+  }
+}

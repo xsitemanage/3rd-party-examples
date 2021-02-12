@@ -222,7 +222,7 @@ fastify.get("/points", async (request, reply) => {
       validateStatus: () => true,
     }
 
-    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/point/points?siteId=${siteId}`
+    callUrl = `https://${MANAGE_API_DOMAIN}/ext/1/point/points?siteId=${siteId}`
     if (request.query.nextToken) callUrl += `&nextToken=${nextToken}`
     callUrl += `&maxPageSize=${maxPageSize}`
     if (request.query.since) callUrl += `&since=${since}`

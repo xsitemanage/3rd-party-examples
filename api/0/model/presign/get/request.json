@@ -1,0 +1,6 @@
+{
+  "queryStringParameters": {
+    "siteId": "uuid",
+    "path": "string"
+  }
+}
