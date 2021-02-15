@@ -1,7 +1,26 @@
 {
-  "body": {
-    "siteId": "uuid",
-    "presignRequestId": "string",
-    "path": "string"
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Add file in temporary location to site model hierarchy",
+  "type": "object",
+  "required": ["body"],
+  "properties": {
+    "body": {
+      "description": "The HTTP Request body",
+      "type": "object",
+      "required": ["siteId", "presignRequestId", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "siteId": {
+          "description": "Site id (string, uuid)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "presignRequestId": {
+          "description": "Request id returned from preceding call to `model/presign/file`",
+          "type": "string"
+        },
+        "path": { "description": "Path of added file", "type": "string" }
+      }
+    }
   }
 }
