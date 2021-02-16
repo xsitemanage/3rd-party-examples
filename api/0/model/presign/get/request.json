@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Presign path in preparation of adding it to a site. May be a new path or update of existing one.",
+  "examples": ["GET https://api.xsitemanage.com/ext/0/model/presign/file?siteId={siteId}&path={path}"],
   "type": "object",
   "required": ["queryStringParameters"],
   "properties": {
