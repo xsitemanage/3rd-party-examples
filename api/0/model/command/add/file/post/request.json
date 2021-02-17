@@ -1,7 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Add file in temporary location to site model hierarchy",
-  "examples": ["POST https://api.xsitemanage.com/ext/0/model/command/add/file"],
   "type": "object",
   "required": ["body"],
   "properties": {

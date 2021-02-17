@@ -1,7 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Get site files",
-  "examples": ["GET https://api.xsitemanage.com/ext/0/model/latest?siteId={siteId}&nextToken={nextToken}&maxPageSize={maxPageSize}"],
   "type": "object",
   "required": ["queryStringParameters"],
   "properties": {

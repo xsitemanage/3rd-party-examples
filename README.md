@@ -23,14 +23,17 @@ Example code showing how Manage external access can be used.
 ## API Usage
 
 ### Common parameters
-For OAUTH2 based authorization, please see example code. Cors support is not available at the moment.
+For OAUTH2 based authorization, please see example code. Cors support is not available
+at the moment.
 
 ### Common errors
 - 400 Bad request. Some request parameter is invalid
 - 401 Unauthorized. Token valid, but no access to requested resource
 - 403 Forbidden. Token is probably not valid
 
-Application error response body: `schema/common-error-body.json`. Please note that systems in between the application and the client also produce error responses of different format.
+Application error response body: [Response schema](schema/common-error-body.json).
+Please note that systems in between the application and the client also produce
+error responses of different format.
 
 ### Paging
 Api endpoints thay may return large set of results may implement paging. In
@@ -41,3 +44,41 @@ the received value back in a field with the same name `nextToken`.
 Note that any endpoint listed here are supporting paging may change its maximum
 page size in the future. Some apis are initially implemented with huge page
 size (meaning no paging in effect), but it may be decreased in the future.
+
+## API endpoints
+A note on documentation syntax: `body` and `queryStringParameters` mentioned in request
+schemas refer to HTTP GET querystring parameters and request body in the other HTTP methods.
+You are not expected to send property `body` or `queryStringParameters` within the request body. 
+
+#### GET https://api.xsitemanage.com/ext/0/site/sites?nextToken={nextToken}&maxPageSize={maxPageSize}
+Get user's sites
+
+[Request schema](api/0/site/sites/get/request.json)
+[Response schema](api/0/site/sites/get/response.json)
+
+#### GET https://api.xsitemanage.com/ext/1/point/points?siteId={siteId}&since={sequenceId}&nextToken={nextToken}&maxPageSize={maxPageSize}
+Get log points for a site
+
+[Request schema](api/1/point/points/get/request.json)
+[Response schema](api/1/point/points/get/response.json)
+
+#### GET https://api.xsitemanage.com/ext/0/model/latest?siteId={siteId}&nextToken={nextToken}&maxPageSize={maxPageSize}
+Get site files
+
+
+[Request schema](api/0/model/latest/get/request.json)
+[Response schema](api/0/model/latest/get/response.json)
+
+#### GET https://api.xsitemanage.com/ext/0/model/presign/file?siteId={siteId}&path={path}
+Presign path in preparation of adding it to a site. May be a new path or update of existing one.
+
+
+[Request schema](api/0/model/presign/file/get/request.json)
+[Response schema](api/0/model/presign/file/get/response.json)
+
+#### POST https://api.xsitemanage.com/ext/0/model/command/add/file
+Add file in temporary location to site model hierarchy
+
+
+[Request schema](api/0/model/command/add/file/post/request.json)
+[Response schema](api/0/model/command/add/file/post/response.json)

@@ -1,7 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Get log points for a site",
-  "examples": ["GET https://api.xsitemanage.com/ext/1/point/points?siteId={siteId}&since={sequenceId}&nextToken={nextToken}&maxPageSize={maxPageSize}"],
   "type": "object",
   "required": ["queryStringParameters"],
   "properties": {
@@ -18,6 +16,7 @@
         },
         "since": {
           "description": "List items after sequenceId. Excludes given sequenceId from the list",
+          "default": 0,
           "type": "integer"
         },
         "maxPageSize": {
