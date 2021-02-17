@@ -1,0 +1,117 @@
+[
+  {
+    "abandoned": false,
+    "accuracy": {
+      "h": 34.5,
+      "z": 34.6
+    },
+    "centerLineId": "centerLineId",
+    "code": "code",
+    "description": "maximal",
+    "fillDepth": 67.8,
+    "groupId": "groupId",
+    "lineId": "0234",
+    "lineIds": ["line1", "line2"],
+    "localId": 12,
+    "machineId": "00000000-0000-0000-0000-111111111111",
+    "machineType": "machineType",
+    "name": "3 Point (5)",
+    "ref": {
+      "code": "ref.code",
+      "dh": 45.7,
+      "dz": 45.6,
+      "filePath": "ref.filePath",
+      "name": "ref.name"
+    },
+    "refRefLine": {
+      "ds": 56.8,
+      "filePath": "refRefLine.filePath",
+      "name": "refRefLine.name",
+      "station": 56.7
+    },
+    "remoteId": 3,
+    "sequenceId": 3,
+    "simulated": true,
+    "siteId": "00000000-0000-0000-0000-000000000001",
+    "siteVersion": 6,
+    "surfaceCode": "surfaceCode",
+    "timestampMs": 12345,
+    "type": "SurveyLinePoint",
+    "x": 234.53,
+    "y": 234.56,
+    "z": 12.3
+  },
+  {
+    "abandoned": false,
+    "description": "minimal",
+    "localId": 12,
+    "machineId": "00000000-0000-0000-0000-111111111111",
+    "remoteId": 3,
+    "sequenceId": 3,
+    "siteId": "00000000-0000-0000-0000-000000000001",
+    "timestampMs": 12345,
+    "type": "SurveyLinePoint"
+  },
+  {
+    "abandoned": false,
+    "accuracy": {
+      "h": 34.5,
+      "z": 34.6
+    },
+    "code": "code",
+    "fillDepth": 67.8,
+    "lineId": "0234",
+    "localId": 12,
+    "machineId": "00000000-0000-0000-0000-111111111111",
+    "machineType": "machineType",
+    "name": "3 Point (5)",
+    "ref": {
+      "code": "ref.code",
+      "dh": 45.7,
+      "dz": 45.6,
+      "filePath": "ref.filePath",
+      "name": "ref.name"
+    },
+    "refRefLine": {
+      "ds": 56.8,
+      "filePath": "refRefLine.filePath",
+      "name": "refRefLine.name",
+      "station": 56.7
+    },
+    "remoteId": 3,
+    "sequenceId": 3,
+    "siteId": "00000000-0000-0000-0000-000000000001",
+    "siteVersion": 6,
+    "surfaceCode": "maximal_realistical_point",
+    "timestampMs": 12345,
+    "type": "AsbuiltLinePoint",
+    "x": 234.53,
+    "y": 234.56,
+    "z": 12.3
+  },
+  {
+    "abandoned": false,
+    "centerLineId": "centerLineId",
+    "code": "code",
+    "description": "maximal string line layers point",
+    "groupId": "groupId",
+    "lineIds": ["line1", "line2"],
+    "localId": 12,
+    "machineId": "00000000-0000-0000-0000-111111111111",
+    "machineType": "machineType",
+    "name": "3 Point (5)",
+    "ref": {
+      "code": "ref.code",
+      "filePath": "ref.filePath",
+      "name": "ref.name"
+    },
+    "remoteId": 3,
+    "sequenceId": 3,
+    "simulated": true,
+    "siteId": "00000000-0000-0000-0000-000000000001",
+    "siteVersion": 6,
+    "surfaceCode": "surfaceCode",
+    "timestampMs": 12345,
+    "type": "OffsetLinePoint"
+  }
+]

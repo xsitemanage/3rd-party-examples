@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["queryStringParameters"],
+  "properties": {
+    "queryStringParameters": {
+      "description": "The HTTP Query String Parameters in the URL",
+      "type": "object",
+      "required": ["siteId", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "siteId": {
+          "description": "Site id (string, uuid)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "path": { "description": "Path of added file", "type": "string" }
+      }
+    }
+  }
+}
