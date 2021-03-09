@@ -170,6 +170,7 @@ fastify.get("/list", async (request, reply) => {
       <td>${site.name}</td>
       <td><a href="points?siteId=${site.siteId}">List points</a></td>
       <td><a href="files?siteId=${site.siteId}">List files</a></td>
+      <td><a href="site/machines?siteId=${site.siteId}">List machines</a></td>
       <td><a href="protection?siteId=${site.siteId}">For protectedFolder/ as companyName</a></td>
       <td><a href="protection?siteId=${site.siteId}&disable=true">For protectedFolder/</a></td>
     </tr>`
@@ -193,6 +194,7 @@ fastify.get("/list", async (request, reply) => {
           <th>Name</th>
           <th>List points</th>
           <th>List files</th>
+          <th>List machines</th>
           <th>Enable protection</th>
           <th>Disable protection</th>
         </tr>
@@ -200,6 +202,67 @@ fastify.get("/list", async (request, reply) => {
       </table>
       <h2>Actions</h2>
       ${nextPage}
+      <a href="list">List sites</a>
+      <h2>Response</h2>
+      <b>Response http status code</b>: <tt>${response.status}</tt><br>
+      <b>Response data</b>: <tt>${htmlEncode(response.data)}</tt><br>
+    </body></html>`
+})
+
+fastify.get("/site/machines", async (request, reply) => {
+  let response
+  let callUrl
+  const siteId = request.query.siteId
+
+  try {
+    const axiosConfig = {
+      headers: { Authorization: idToken },
+      // Never throw, we simply want to print the response
+      validateStatus: () => true,
+    }
+
+    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/site/sites/machines?siteId=${siteId}`
+
+    response = await axios.get(callUrl, axiosConfig)
+
+    const dataStr = JSON.stringify(response.data)
+    console.log(
+      `Manage sites machines call response: Http status code: ${response.status}, Data: ${dataStr}`
+    )
+  } catch (err) {
+    const msg = `Error during Manage api call: ${err}`
+    console.log(msg)
+    throw new Error(msg)
+  }
+
+  let siteMachineRows = ""
+  for (const machine of response.data.items) {
+    siteMachineRows += `<tr>
+      <td>${machine.siteId}</td>
+      <td>${machine.machineId}</td>
+      <td>${machine.name}</td>
+      <td>${machine.inactiveTimestamp || ""}</td>
+    </tr>`
+  }
+
+  reply.type("text/html")
+  return `
+    <html><body>
+      <h1>List sites machines</h1>
+      <h2>Request</h2>
+      <b>Method:</b> <tt>GET</tt><br>
+      <b>Url:</b> <tt>${callUrl}</tt>
+      <h2>Received sites machines</h2>
+      <table>
+        <tr>
+          <th>SiteId</th>
+          <th>MachineId</th>
+          <th>Name</th>
+          <th>Inactive Timestamp</th>
+        </tr>
+        ${siteMachineRows}
+      </table>
+      <h2>Actions</h2>
       <a href="list">List sites</a>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
@@ -244,7 +307,9 @@ fastify.get("/points", async (request, reply) => {
   const maxSequenceId = Math.max(...sequenceIds)
   let nextPage = ""
   if (response.data.nextToken)
-    nextPage = `<a href="points?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}&since=${since || 0}">Get next page</a><br/>`
+    nextPage = `<a href="points?siteId=${siteId}&nextToken=${
+      response.data.nextToken
+    }&maxPageSize=${maxPageSize}&since=${since || 0}">Get next page</a><br/>`
   reply.type("text/html")
   return `
     <html><body>
