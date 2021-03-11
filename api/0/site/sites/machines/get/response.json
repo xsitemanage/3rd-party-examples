@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": ["siteId", "name", "machineId"],
+        "properties": {
+          "siteId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique site identifier within Xsite® MANAGE"
+          },
+          "machineId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique machine identifier within Xsite® MANAGE"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the machine"
+          },
+          "inactiveTimestamp": {
+            "type": "number",
+            "description": "If present, machine doesn't have permissions to the site. Timestamp when the machines has been revoked access"
+          }
+        }
+      }
+    }
+  }
+}
