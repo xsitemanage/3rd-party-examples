@@ -34,6 +34,7 @@
     "simulated": true,
     "siteId": "00000000-0000-0000-0000-000000000001",
     "siteVersion": 6,
+    "staStart": 24.2,
     "surfaceCode": "surfaceCode",
     "timestampMs": 12345,
     "type": "SurveyLinePoint",
@@ -82,6 +83,7 @@
     "sequenceId": 3,
     "siteId": "00000000-0000-0000-0000-000000000001",
     "siteVersion": 6,
+    "staStart": 24.2,
     "surfaceCode": "maximal_realistical_point",
     "timestampMs": 12345,
     "type": "AsbuiltLinePoint",
@@ -110,6 +112,7 @@
     "simulated": true,
     "siteId": "00000000-0000-0000-0000-000000000001",
     "siteVersion": 6,
+    "staStart": 24.2,
     "surfaceCode": "surfaceCode",
     "timestampMs": 12345,
     "type": "OffsetLinePoint"

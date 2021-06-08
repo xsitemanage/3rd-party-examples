@@ -101,6 +101,10 @@
             "type": "boolean",
             "description": "If logpoint was created via simulation"
           },
+          "staStart": {
+            "type": "string",
+            "description": "Stationing start for element"
+          },
           "type": {
             "type": "string",
             "description": "Object type information",
@@ -147,11 +151,11 @@
             "properties": {
               "name": {
                 "description": "Name of the reference object",
-                "type":"string"
+                "type": "string"
               },
               "filePath": {
-                  "description": "Path and filename of the file which was in use when measuring this point",
-                  "type":"string"
+                "description": "Path and filename of the file which was in use when measuring this point",
+                "type": "string"
               },
               "code": {
                 "description": "IM code for the log point",
@@ -172,11 +176,11 @@
             "properties": {
               "name": {
                 "description": "Name of the reference object",
-                "type":"string"
+                "type": "string"
               },
               "filePath": {
                 "description": "Path and filename of the file which was in use when measuring this point",
-                "type":"string"
+                "type": "string"
               },
               "station": {
                 "description": "Position along the measurement line / Linear Referencing System milepost",
