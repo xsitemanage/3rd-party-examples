@@ -88,8 +88,8 @@ Get site files
 
 Presign path in preparation of adding it to a site. May be a new path or update of existing one.
 
-[Request schema](api/0/model/presign/file/get/request.json)
-[Response schema](api/0/model/presign/file/get/response.json)
+[Request schema](api/0/model/presign/get/request.json)
+[Response schema](api/0/model/presign/get/response.json)
 
 #### POST https://api.xsitemanage.com/ext/0/model/command/add/file
 
