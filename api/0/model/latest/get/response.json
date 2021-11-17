@@ -27,7 +27,7 @@
           },
           "path": {
             "type": "string",
-            "description": "Path in project model hierarchy"
+            "description": "Path in the project model hierarchy"
           },
           "version": {
             "type": "integer",
@@ -40,7 +40,7 @@
           "userId": {
             "type": "string",
             "format": "uuid",
-            "description": "Id of user that saved the file"
+            "description": "Id of the user that saved the file"
           },
           "size": {
             "type": "integer",

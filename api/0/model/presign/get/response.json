@@ -13,11 +13,11 @@
     },
     "requestId": {
       "type": "string",
-      "description": "Presign request id. Needed when performing the 'add file' command after upload"
+      "description": "Presign request id. Needed when performing the 'add file' command after the upload"
     },
     "path": {
       "type": "string",
-      "description": "Same as input path"
+      "description": "Same as the input path"
     }
   }
 }

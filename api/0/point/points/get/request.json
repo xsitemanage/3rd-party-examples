@@ -15,7 +15,7 @@
           "format": "uuid"
         },
         "since": {
-          "description": "List items after sequenceId. Excludes given sequenceId from the list",
+          "description": "List items after the sequenceId. Excludes the given sequenceId from the list",
           "default": 0,
           "type": "integer"
         },
