@@ -14,7 +14,10 @@
           "type": "string",
           "format": "uuid"
         },
-        "path": { "description": "Path of added file", "type": "string" }
+        "path": {
+          "description": "Path of added file (.prm and .geoid not permitted)",
+          "type": "string"
+        }
       }
     }
   }

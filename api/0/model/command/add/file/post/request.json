@@ -18,7 +18,10 @@
           "description": "Request id returned from preceding call to `model/presign/file`",
           "type": "string"
         },
-        "path": { "description": "Path of added file", "type": "string" }
+        "path": {
+          "description": "Path of added file (.prm and .geoid not permitted)",
+          "type": "string"
+        }
       }
     }
   }
