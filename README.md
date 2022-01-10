@@ -56,6 +56,11 @@ A note on documentation syntax: `body` and `queryStringParameters` mentioned in 
 schemas refer to HTTP GET querystring parameters and request body in the other HTTP methods.
 You are not expected to send property `body` or `queryStringParameters` within the request body.
 
+A note on JSON schema format: The schema of an object can include property `additionalProperties`. 
+If not set or set to `true`, object properties that have not been defined are allowed. In practice 
+this means new properties can be added to the API without prior warning. If set to `false` this
+is not possible.
+
 #### GET https://api.xsitemanage.com/ext/0/site/sites?nextToken={nextToken}&maxPageSize={maxPageSize}
 
 Get user's sites

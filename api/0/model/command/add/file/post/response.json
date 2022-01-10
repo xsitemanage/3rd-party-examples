@@ -1,6 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": [],
-  "properties": {}
+  "required": ["siteVersion"],
+  "properties": {
+    "siteVersion": {
+      "type": "integer",
+      "description": "Site version where the new file was added. Increasing, but not necessarily continuous."
+    }
+  }
 }
