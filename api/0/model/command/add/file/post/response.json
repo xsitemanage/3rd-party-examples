@@ -5,7 +5,7 @@
   "properties": {
     "siteVersion": {
       "type": "integer",
-      "description": "Site version where the new file was added. Increasing, but not necessarily continuous."
+      "description": "Version of the sites file list where the new file was added. Version is increased when files are added or deleted. It is not necessarily continuous."
     }
   }
 }
