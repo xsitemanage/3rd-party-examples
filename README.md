@@ -99,6 +99,7 @@ Presign path in preparation of adding it to a site. May be a new path or update 
 #### POST https://api.xsitemanage.com/ext/0/model/command/add/file
 
 Add file in temporary location to site model hierarchy
+API expects content-type to be application/json
 
 [Request schema](api/0/model/command/add/file/post/request.json)
 [Response schema](api/0/model/command/add/file/post/response.json)
