@@ -4,17 +4,109 @@ const htmlencode = require("node-htmlencode")
 const { stringify } = require("querystring")
 require("dotenv").config()
 
+fastify.register(require("@fastify/multipart"))
+
 const PORT = process.env.PORT
 const CLIENT_ID = process.env.CLIENT_ID
 const CLIENT_SECRET = process.env.CLIENT_SECRET
 const REDIRECT_URI = process.env.REDIRECT_URI
+const CALLBACK_PATH = new URL(REDIRECT_URI).pathname
 const AUTH_DOMAIN = process.env.AUTH_DOMAIN
 const MANAGE_API_DOMAIN = process.env.MANAGE_API_DOMAIN
 // CSRF token should not be static in production use
 const CSRF_STATE = "REPLACE_WITH_CROSS_SITE_REQUEST_FORGERY_TOKEN"
 
+const MAX_PAGE_SIZE = 25
+
+if (
+  !CLIENT_ID ||
+  !REDIRECT_URI ||
+  !CALLBACK_PATH ||
+  !AUTH_DOMAIN ||
+  !MANAGE_API_DOMAIN
+) {
+  throw new Error("Invalid configuration, check .env file")
+}
 // Received id token
 let idToken
+
+async function presignFile({ siteId, path }) {
+  let response
+  const callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/model/presign/file?siteId=${siteId}&path=${path}`
+
+  try {
+    const axiosConfig = {
+      headers: { Authorization: idToken },
+      // Never throw, we simply want to print the response
+      validateStatus: () => true,
+    }
+    response = await axios.get(callUrl, axiosConfig)
+
+    const dataStr = JSON.stringify(response.data)
+    console.log(
+      `PRESIGN: Manage sites call response: Http status code: ${response.status}, Data: ${dataStr}`
+    )
+  } catch (err) {
+    const msg = `Error during Manage api call: ${err}`
+    console.log(msg)
+    throw new Error(msg)
+  }
+
+  return { ...response, callUrl }
+}
+
+async function uploadFile({ presignUrl, fileBuffer }) {
+  let response
+  try {
+    const axiosConfig = {
+      // No id token here, it is passed in url query parameters when uploading!
+      headers: { "Content-Type": "application/octet-stream" },
+      // Never throw, we simply want to print the response
+      validateStatus: () => true,
+    }
+
+    response = await axios.put(presignUrl, fileBuffer, axiosConfig)
+
+    const dataStr = JSON.stringify(response.data)
+    console.log(
+      `UPLOAD file: Manage sites call response: Http status code: ${response.status}, Data: ${dataStr}`
+    )
+  } catch (err) {
+    const msg = `Error during Manage api call: ${err}`
+    console.log(msg)
+    throw new Error(msg)
+  }
+
+  return response
+}
+
+async function addFile({ siteId, path, presignRequestId }) {
+  let response
+  const callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/model/command/add/file`
+
+  try {
+    const axiosConfig = {
+      headers: { Authorization: idToken },
+      // Never throw, we simply want to print the response
+      validateStatus: () => true,
+    }
+
+    const callBody = { siteId, path, presignRequestId }
+    console.log(callBody)
+    response = await axios.post(callUrl, callBody, axiosConfig)
+
+    const dataStr = JSON.stringify(response.data)
+    console.log(
+      `ADD: Manage sites call response: Http status code: ${response.status}, Data: ${dataStr}`
+    )
+  } catch (err) {
+    const msg = `Error during Manage api call: ${err}`
+    console.log(msg)
+    throw new Error(msg)
+  }
+
+  return { ...response, callUrl }
+}
 
 /**
  * Convert given json object for priting in html.
@@ -107,7 +199,7 @@ fastify.get("/", async (request, reply) => {
 })
 
 // 2. Process callback from authentication UI in order to get refresh token. Redirects to success URL
-fastify.get("/callback", async (request, reply) => {
+fastify.get(CALLBACK_PATH, async (request, reply) => {
   console.log("got callback", request.raw.url)
   const code = request.query.code
   const state = request.query.state
@@ -129,7 +221,9 @@ fastify.get("/success", async (request, reply) => {
     <html><body>
       <h1>Authentication</h1>
       <h2>Actions</h2>
-      <a href="list">List sites</a>
+      <ul>
+      <li><a href="list">List sites</li>
+      </ul>
       <h2>Result</h2>
       Authentication successful
     </body></html>`
@@ -138,7 +232,6 @@ fastify.get("/success", async (request, reply) => {
 fastify.get("/list", async (request, reply) => {
   let response
   let callUrl
-  const maxPageSize = request.query.maxPageSize || 5
   const nextToken = request.query.nextToken
 
   try {
@@ -148,7 +241,7 @@ fastify.get("/list", async (request, reply) => {
       validateStatus: () => true,
     }
 
-    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/site/sites?maxPageSize=${maxPageSize}`
+    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/site/sites?maxPageSize=${MAX_PAGE_SIZE}`
     if (nextToken) callUrl += `&nextToken=${nextToken}`
 
     response = await axios.get(callUrl, axiosConfig)
@@ -178,7 +271,7 @@ fastify.get("/list", async (request, reply) => {
 
   let nextPage = ""
   if (response.data.nextToken)
-    nextPage = `<a href="list?nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Next sites</a><br/>`
+    nextPage = `<a href="list?nextToken=${response.data.nextToken}&maxPageSize=${MAX_PAGE_SIZE}">Next sites</a><br/>`
 
   reply.type("text/html")
   return `
@@ -201,8 +294,10 @@ fastify.get("/list", async (request, reply) => {
         ${siteTableRows}
       </table>
       <h2>Actions</h2>
-      ${nextPage}
-      <a href="list">List sites</a>
+      <ul>
+      ${nextPage.length > 0 ? `<li>${nextPage}</li>` : ""}
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${htmlEncode(response.data)}</tt><br>
@@ -262,8 +357,10 @@ fastify.get("/site/machines", async (request, reply) => {
         </tr>
         ${siteMachineRows}
       </table>
+      <ul>
       <h2>Actions</h2>
-      <a href="list">List sites</a>
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${htmlEncode(response.data)}</tt><br>
@@ -274,7 +371,6 @@ fastify.get("/points", async (request, reply) => {
   const siteId = request.query.siteId
   const nextToken = request.query.nextToken
   const since = request.query.since
-  const maxPageSize = request.query.maxPageSize || 5
   let response
   let callUrl
 
@@ -287,7 +383,7 @@ fastify.get("/points", async (request, reply) => {
 
     callUrl = `https://${MANAGE_API_DOMAIN}/ext/1/point/points?siteId=${siteId}`
     if (request.query.nextToken) callUrl += `&nextToken=${nextToken}`
-    callUrl += `&maxPageSize=${maxPageSize}`
+    callUrl += `&maxPageSize=${MAX_PAGE_SIZE}`
     if (request.query.since) callUrl += `&since=${since}`
     response = await axios.get(callUrl, axiosConfig)
 
@@ -309,7 +405,7 @@ fastify.get("/points", async (request, reply) => {
   if (response.data.nextToken)
     nextPage = `<a href="points?siteId=${siteId}&nextToken=${
       response.data.nextToken
-    }&maxPageSize=${maxPageSize}&since=${since || 0}">Get next page</a><br/>`
+    }&maxPageSize=${MAX_PAGE_SIZE}&since=${since || 0}">Get next page</a><br/>`
   reply.type("text/html")
   return `
     <html><body>
@@ -322,9 +418,11 @@ fastify.get("/points", async (request, reply) => {
       <b>Min sequence id:</b> ${minSequenceId}<br>
       <b>Max sequence id:</b> ${maxSequenceId}<br>
       <h2>Actions</h2>
-      ${nextPage}
-      <a href="points?siteId=${siteId}&since=1">Get points since sequenceId 1</a><br/>
-      <a href="list">List sites</a>
+      <ul>
+      ${nextPage.length > 0 ? `<li>${nextPage}</li>` : ""}
+      <li><a href="points?siteId=${siteId}&since=1">Get points since sequenceId 1</a></li>
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${htmlEncode(response.data)}</tt><br>
@@ -333,7 +431,6 @@ fastify.get("/points", async (request, reply) => {
 
 fastify.get("/files", async (request, reply) => {
   const siteId = request.query.siteId
-  const maxPageSize = request.query.maxPageSize || 5
   const nextToken = request.query.nextToken
   let response
   let callUrl
@@ -345,8 +442,7 @@ fastify.get("/files", async (request, reply) => {
       validateStatus: () => true,
     }
 
-    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/model/latest?siteId=${siteId}`
-    if (maxPageSize) callUrl = callUrl + `&maxPageSize=${maxPageSize}`
+    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/model/latest?siteId=${siteId}&maxPageSize=${MAX_PAGE_SIZE}`
     if (nextToken) callUrl = callUrl + `&nextToken=${nextToken}`
     response = await axios.get(callUrl, axiosConfig)
 
@@ -382,11 +478,11 @@ fastify.get("/files", async (request, reply) => {
   let nextPage = ""
 
   if (response.data.nextToken)
-    nextPage = `<br>
-    <a href="files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${maxPageSize}">Get next page</a><br/>`
+    nextPage = `<a href="files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${MAX_PAGE_SIZE}">Get next page</a><br/>`
   reply.type("text/html")
   return `
-    <html><body>
+    <html>
+    <body>
       <h1>List files of site ${siteId}</h1>
       <h2>Request</h2>
       <b>Method:</b> <tt>GET</tt><br>
@@ -408,13 +504,23 @@ fastify.get("/files", async (request, reply) => {
         ${fileTableRows}
       </table>
       <h2>Actions</h2>
-      ${nextPage}
-      <a href="presign?siteId=${siteId}&path=${newPath}">Upload new file with name ${newPath}</a><br/>
-      <a href="list">List sites</a>
+      <ul id="actions-list">
+      ${nextPage.length > 0 ? `<li>${nextPage}</li>` : ""}
+      <li><a href="presign?siteId=${siteId}&path=${newPath}">Presign new file with name ${newPath}</a></li>
+      <li>
+        <form method="post" enctype="multipart/form-data" action="/upload?siteId=${siteId}">
+          <label for="upload-custom">Upload selected file from disk</label>
+          <input id="upload-custom" type="file" name="file" />
+          <button type="submit">Presign</button>
+        </form>
+      </li>
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${JSON.stringify(response.data)}</tt><br>
-    </body></html>`
+      </body>
+    </html>`
 })
 
 fastify.get("/protection", async (request, reply) => {
@@ -465,7 +571,9 @@ fastify.get("/protection", async (request, reply) => {
       <b>Url:</b> <tt>${callUrl}</tt><br>
       <b>Request body:</b> <tt>${JSON.stringify(callBody)}</tt>
       <h2>Actions</h2>
-      <a href="list">List sites</a>
+      <ul>
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${JSON.stringify(response.data)}</tt><br>
@@ -503,7 +611,9 @@ fastify.get("/download", async (request, reply) => {
       <b>Method:</b> <tt>GET</tt><br>
       <b>Url:</b> <tt>${callUrl}</tt><br>
       <h2>Actions</h2>
-      <a href="list">List sites</a>
+      <ul>
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${response.data}</tt><br>
@@ -513,29 +623,7 @@ fastify.get("/download", async (request, reply) => {
 fastify.get("/presign", async (request, reply) => {
   const { siteId, path } = request.query
 
-  let callUrl
-
-  let response
-  try {
-    const axiosConfig = {
-      headers: { Authorization: idToken },
-      // Never throw, we simply want to print the response
-      validateStatus: () => true,
-    }
-
-    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/model/presign/file?siteId=${siteId}&path=${path}`
-    response = await axios.get(callUrl, axiosConfig)
-
-    const dataStr = JSON.stringify(response.data)
-    console.log(
-      `Manage sites call response: Http status code: ${response.status}, Data: ${dataStr}`
-    )
-  } catch (err) {
-    const msg = `Error during Manage api call: ${err}`
-    console.log(msg)
-    throw new Error(msg)
-  }
-
+  const response = await presignFile({ siteId, path })
   const { url, requestId: presignRequestId } = response.data
 
   const encodedUrl = encodeURIComponent(url)
@@ -545,10 +633,12 @@ fastify.get("/presign", async (request, reply) => {
       <h1>Presigning path ${path} of site ${siteId}</h1>
       <h2>Request</h2>
       <b>Method:</b> <tt>GET</tt><br>
-      <b>Url:</b> <tt>${callUrl}</tt><br>
+      <b>Url:</b> <tt>${response.callUrl}</tt><br>
       <h2>Actions</h2>
-      <a href="upload?siteId=${siteId}&path=${path}&presignRequestId=${presignRequestId}&uploadUrl=${encodedUrl}">Upload file with contents <tt>test1\ntest2\n</tt></a><br>
-      <a href="list">List sites</a>
+      <ul>
+      <li><a href="upload?siteId=${siteId}&path=${path}&presignRequestId=${presignRequestId}&uploadUrl=${encodedUrl}">Upload file with contents: <tt>test1\ntest2\n</tt></a></li>
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${htmlEncode(response.data)}</tt><br>
@@ -556,30 +646,12 @@ fastify.get("/presign", async (request, reply) => {
 })
 
 fastify.get("/upload", async (request, reply) => {
-  const { siteId, path, presignRequestId, uploadUrl: callUrl } = request.query
-
-  let callBody
-  let response
-  try {
-    const axiosConfig = {
-      // No id token here, it is passed in url query parameters when uploading!
-      headers: { "Content-Type": "application/octet-stream" },
-      // Never throw, we simply want to print the response
-      validateStatus: () => true,
-    }
-
-    callBody = "test1\ntest2\n"
-    response = await axios.put(callUrl, callBody, axiosConfig)
-
-    const dataStr = JSON.stringify(response.data)
-    console.log(
-      `Manage sites call response: Http status code: ${response.status}, Data: ${dataStr}`
-    )
-  } catch (err) {
-    const msg = `Error during Manage api call: ${err}`
-    console.log(msg)
-    throw new Error(msg)
-  }
+  const { siteId, path, presignRequestId, uploadUrl } = request.query
+  const callBody = "test1\ntest2\n"
+  const response = await uploadFile({
+    presignUrl: uploadUrl,
+    fileBuffer: Buffer.from(callBody),
+  })
 
   reply.type("text/html")
   return `
@@ -587,44 +659,39 @@ fastify.get("/upload", async (request, reply) => {
       <h1>Uploading path ${path} of site ${siteId} as temporary file</h1>
       <h2>Request</h2>
       <b>Method:</b> <tt>POST</tt><br>
-      <b>Url:</b> <tt>${callUrl}</tt><br>
+      <b>Url:</b> <tt>${uploadUrl}</tt><br>
       <b>Request body:</b> <tt>${htmlEncode(callBody)}</tt>
       <h2>Actions</h2>
-      <a href="addfile?siteId=${siteId}&path=${path}&presignRequestId=${presignRequestId}">Add uploaded file to site</a><br>
-      <a href="list">List sites</a><br>
+      <ul>
+      <li><a href="addfile?siteId=${siteId}&path=${path}&presignRequestId=${presignRequestId}">Add uploaded file to site</a></li>
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${htmlEncode(response.data)}</tt><br>
     </body></html>`
 })
 
+fastify.post("/upload", async (request, reply) => {
+  const file = await request.file()
+  const { siteId } = request.query
+
+  const response = await presignFile({ siteId, path: file.filename })
+  const { url: presignUrl, requestId: presignRequestId } = response.data
+
+  const fileBuffer = await file.toBuffer()
+
+  await uploadFile({ presignUrl, fileBuffer })
+  await addFile({ siteId, path: file.filename, presignRequestId })
+
+  reply.redirect(`files?siteId=${siteId}`)
+})
+
 fastify.get("/addfile", async (request, reply) => {
   const { siteId, path, presignRequestId } = request.query
 
-  let callUrl
-  let callBody
-
-  let response
-  try {
-    const axiosConfig = {
-      headers: { Authorization: idToken },
-      // Never throw, we simply want to print the response
-      validateStatus: () => true,
-    }
-
-    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/model/command/add/file`
-    callBody = { siteId, path, presignRequestId }
-    response = await axios.post(callUrl, callBody, axiosConfig)
-
-    const dataStr = JSON.stringify(response.data)
-    console.log(
-      `Manage sites call response: Http status code: ${response.status}, Data: ${dataStr}`
-    )
-  } catch (err) {
-    const msg = `Error during Manage api call: ${err}`
-    console.log(msg)
-    throw new Error(msg)
-  }
+  const callBody = { siteId, path, presignRequestId }
+  const response = await addFile(callBody)
 
   reply.type("text/html")
   return `
@@ -632,11 +699,13 @@ fastify.get("/addfile", async (request, reply) => {
       <h1>Adding previously added temporary path ${path} to site ${siteId}</h1>
       <h2>Request</h2>
       <b>Method:</b> <tt>POST</tt><br>
-      <b>Url:</b> <tt>${callUrl}</tt><br>
+      <b>Url:</b> <tt>${response.callUrl}</tt><br>
       <b>Request body:</b> <tt>${htmlEncode(callBody)}</tt>
       <h2>Actions</h2>
-      <a href="files?siteId=${siteId}">List site files</a><br>
-      <a href="list">List sites</a><br>
+      <ul>
+      <li><a href="files?siteId=${siteId}">List site files</a></li>
+      <li><a href="list">List sites</a></li>
+      </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${JSON.stringify(response.data)}</tt><br>
