@@ -63,6 +63,7 @@ async function uploadFile({ presignUrl, fileBuffer }) {
       headers: { "Content-Type": "application/octet-stream" },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
+      maxBodyLength: Infinity,
     }
 
     response = await axios.put(presignUrl, fileBuffer, axiosConfig)
@@ -264,8 +265,6 @@ fastify.get("/list", async (request, reply) => {
       <td><a href="points?siteId=${site.siteId}">List points</a></td>
       <td><a href="files?siteId=${site.siteId}">List files</a></td>
       <td><a href="site/machines?siteId=${site.siteId}">List machines</a></td>
-      <td><a href="protection?siteId=${site.siteId}">For protectedFolder/ as companyName</a></td>
-      <td><a href="protection?siteId=${site.siteId}&disable=true">For protectedFolder/</a></td>
     </tr>`
   }
 
@@ -288,8 +287,6 @@ fastify.get("/list", async (request, reply) => {
           <th>List points</th>
           <th>List files</th>
           <th>List machines</th>
-          <th>Enable protection</th>
-          <th>Disable protection</th>
         </tr>
         ${siteTableRows}
       </table>
@@ -511,7 +508,7 @@ fastify.get("/files", async (request, reply) => {
         <form method="post" enctype="multipart/form-data" action="/upload?siteId=${siteId}">
           <label for="upload-custom">Upload selected file from disk</label>
           <input id="upload-custom" type="file" name="file" />
-          <button type="submit">Presign</button>
+          <button type="submit">Presign, upload and add the file</button>
         </form>
       </li>
       <li><a href="list">List sites</a></li>
@@ -521,63 +518,6 @@ fastify.get("/files", async (request, reply) => {
       <b>Response data</b>: <tt>${JSON.stringify(response.data)}</tt><br>
       </body>
     </html>`
-})
-
-fastify.get("/protection", async (request, reply) => {
-  const siteId = request.query.siteId
-  const disable = request.query.disable === "true"
-
-  let response
-  let callUrl
-  let callBody
-
-  try {
-    const axiosConfig = {
-      headers: { Authorization: idToken },
-      // Never throw, we simply want to print the response
-      validateStatus: () => true,
-    }
-
-    callUrl = `https://${MANAGE_API_DOMAIN}/ext/0/site/protection`
-    callBody = disable
-      ? {
-          siteId,
-          protection: {},
-        }
-      : {
-          siteId,
-          protection: {
-            prefixes: { "protectedFolder/": "companyName" },
-          },
-        }
-    response = await axios.put(callUrl, callBody, axiosConfig)
-
-    const dataStr = JSON.stringify(response.data)
-    console.log(
-      `Manage sites call response: Http status code: ${response.status}, Data: ${dataStr}`
-    )
-  } catch (err) {
-    const msg = `Error during Manage api call: ${err}`
-    console.log(msg)
-    throw new Error(msg)
-  }
-
-  reply.type("text/html")
-  return `
-    <html><body>
-      <h1>Set directory protection for site ${siteId}</h1>
-      <h2>Request</h2>
-      <b>Method:</b> <tt>PUT</tt><br>
-      <b>Url:</b> <tt>${callUrl}</tt><br>
-      <b>Request body:</b> <tt>${JSON.stringify(callBody)}</tt>
-      <h2>Actions</h2>
-      <ul>
-      <li><a href="list">List sites</a></li>
-      </ul>
-      <h2>Response</h2>
-      <b>Response http status code</b>: <tt>${response.status}</tt><br>
-      <b>Response data</b>: <tt>${JSON.stringify(response.data)}</tt><br>
-    </body></html>`
 })
 
 fastify.get("/download", async (request, reply) => {
