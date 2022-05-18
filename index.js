@@ -63,6 +63,7 @@ async function uploadFile({ presignUrl, fileBuffer }) {
       headers: { "Content-Type": "application/octet-stream" },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
+      maxBodyLength: Infinity,
     }
 
     response = await axios.put(presignUrl, fileBuffer, axiosConfig)
@@ -511,7 +512,7 @@ fastify.get("/files", async (request, reply) => {
         <form method="post" enctype="multipart/form-data" action="/upload?siteId=${siteId}">
           <label for="upload-custom">Upload selected file from disk</label>
           <input id="upload-custom" type="file" name="file" />
-          <button type="submit">Presign</button>
+          <button type="submit">Presign, upload and add the file</button>
         </form>
       </li>
       <li><a href="list">List sites</a></li>
