@@ -264,7 +264,7 @@ fastify.get("/list", async (request, reply) => {
       <td>${site.name}</td>
       <td><a href="points?siteId=${site.siteId}">List points</a></td>
       <td><a href="files?siteId=${site.siteId}">List files</a></td>
-      <td><a href="site/machines?siteId=${site.siteId}">List machines</a></td>
+      <td><a href="machines?siteId=${site.siteId}">List machines</a></td>
     </tr>`
   }
 
@@ -301,7 +301,7 @@ fastify.get("/list", async (request, reply) => {
     </body></html>`
 })
 
-fastify.get("/site/machines", async (request, reply) => {
+fastify.get("/machines", async (request, reply) => {
   let response
   let callUrl
   const siteId = request.query.siteId
