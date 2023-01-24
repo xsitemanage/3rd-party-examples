@@ -188,7 +188,7 @@ const getIdToken = async (refreshToken) => {
 }
 
 // 1. Forward requests to authentication UI
-fastify.get("/", async (request, reply) => {
+fastify.get("/api", async (request, reply) => {
   reply.type("text/html")
   return `<html>
     <head>
@@ -223,14 +223,14 @@ fastify.get("/success", async (request, reply) => {
       <h1>Authentication</h1>
       <h2>Actions</h2>
       <ul>
-      <li><a href="list">List sites</li>
+      <li><a href="/api/list">List sites</li>
       </ul>
       <h2>Result</h2>
       Authentication successful
     </body></html>`
 })
 
-fastify.get("/list", async (request, reply) => {
+fastify.get("/api/list", async (request, reply) => {
   let response
   let callUrl
   const nextToken = request.query.nextToken
@@ -262,15 +262,15 @@ fastify.get("/list", async (request, reply) => {
     siteTableRows += `<tr>
       <td>${site.siteId}</td>
       <td>${site.name}</td>
-      <td><a href="points?siteId=${site.siteId}">List points</a></td>
-      <td><a href="files?siteId=${site.siteId}">List files</a></td>
-      <td><a href="machines?siteId=${site.siteId}">List machines</a></td>
+      <td><a href="/api/points?siteId=${site.siteId}">List points</a></td>
+      <td><a href="/api/files?siteId=${site.siteId}">List files</a></td>
+      <td><a href="/api/machines?siteId=${site.siteId}">List machines</a></td>
     </tr>`
   }
 
   let nextPage = ""
   if (response.data.nextToken)
-    nextPage = `<a href="list?nextToken=${response.data.nextToken}&maxPageSize=${MAX_PAGE_SIZE}">Next sites</a><br/>`
+    nextPage = `<a href="/api/list?nextToken=${response.data.nextToken}&maxPageSize=${MAX_PAGE_SIZE}">Next sites</a><br/>`
 
   reply.type("text/html")
   return `
@@ -293,7 +293,7 @@ fastify.get("/list", async (request, reply) => {
       <h2>Actions</h2>
       <ul>
       ${nextPage.length > 0 ? `<li>${nextPage}</li>` : ""}
-      <li><a href="list">List sites</a></li>
+      <li><a href="/api/list">List sites</a></li>
       </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
@@ -301,7 +301,7 @@ fastify.get("/list", async (request, reply) => {
     </body></html>`
 })
 
-fastify.get("/machines", async (request, reply) => {
+fastify.get("/api/machines", async (request, reply) => {
   let response
   let callUrl
   const siteId = request.query.siteId
@@ -356,7 +356,7 @@ fastify.get("/machines", async (request, reply) => {
       </table>
       <ul>
       <h2>Actions</h2>
-      <li><a href="list">List sites</a></li>
+      <li><a href="/api/list">List sites</a></li>
       </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
@@ -364,7 +364,7 @@ fastify.get("/machines", async (request, reply) => {
     </body></html>`
 })
 
-fastify.get("/points", async (request, reply) => {
+fastify.get("/api/points", async (request, reply) => {
   const siteId = request.query.siteId
   const nextToken = request.query.nextToken
   const since = request.query.since
@@ -400,7 +400,7 @@ fastify.get("/points", async (request, reply) => {
   const maxSequenceId = Math.max(...sequenceIds)
   let nextPage = ""
   if (response.data.nextToken)
-    nextPage = `<a href="points?siteId=${siteId}&nextToken=${
+    nextPage = `<a href="/api/points?siteId=${siteId}&nextToken=${
       response.data.nextToken
     }&maxPageSize=${MAX_PAGE_SIZE}&since=${since || 0}">Get next page</a><br/>`
   reply.type("text/html")
@@ -417,8 +417,8 @@ fastify.get("/points", async (request, reply) => {
       <h2>Actions</h2>
       <ul>
       ${nextPage.length > 0 ? `<li>${nextPage}</li>` : ""}
-      <li><a href="points?siteId=${siteId}&since=1">Get points since sequenceId 1</a></li>
-      <li><a href="list">List sites</a></li>
+      <li><a href="/api/points?siteId=${siteId}&since=1">Get points since sequenceId 1</a></li>
+      <li><a href="/api/list">List sites</a></li>
       </ul>
       <h2>Response</h2>
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
@@ -426,7 +426,7 @@ fastify.get("/points", async (request, reply) => {
     </body></html>`
 })
 
-fastify.get("/files", async (request, reply) => {
+fastify.get("/api/files", async (request, reply) => {
   const siteId = request.query.siteId
   const nextToken = request.query.nextToken
   let response
@@ -466,8 +466,8 @@ fastify.get("/files", async (request, reply) => {
       <td>${file.size}</td>
       <td>${file.version}</td>
       <td>${new Date(file.timestampMs).toISOString()}</td>
-      <td><a href="/download?url=${encodedUrl}">Download</a></td>
-      <td><a href="/presign?siteId=${siteId}&path=${path}">Upload new version</a></td>
+      <td><a href="/api/download?url=${encodedUrl}">Download</a></td>
+      <td><a href="/api/presign?siteId=${siteId}&path=${path}">Upload new version</a></td>
     </tr>`
   }
 
@@ -475,7 +475,7 @@ fastify.get("/files", async (request, reply) => {
   let nextPage = ""
 
   if (response.data.nextToken)
-    nextPage = `<a href="files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${MAX_PAGE_SIZE}">Get next page</a><br/>`
+    nextPage = `<a href="api/files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${MAX_PAGE_SIZE}">Get next page</a><br/>`
   reply.type("text/html")
   return `
     <html>
@@ -505,7 +505,7 @@ fastify.get("/files", async (request, reply) => {
       ${nextPage.length > 0 ? `<li>${nextPage}</li>` : ""}
       <li><a href="presign?siteId=${siteId}&path=${newPath}">Presign new file with name ${newPath}</a></li>
       <li>
-        <form method="post" enctype="multipart/form-data" action="/upload?siteId=${siteId}">
+        <form method="post" enctype="multipart/form-data" action="/api/upload?siteId=${siteId}">
           <label for="upload-custom">Upload selected file from disk</label>
           <input id="upload-custom" type="file" name="file" />
           <button type="submit">Presign, upload and add the file</button>
@@ -520,7 +520,7 @@ fastify.get("/files", async (request, reply) => {
     </html>`
 })
 
-fastify.get("/download", async (request, reply) => {
+fastify.get("/api/download", async (request, reply) => {
   const callUrl = request.query.url
 
   let response
@@ -560,7 +560,7 @@ fastify.get("/download", async (request, reply) => {
     </body></html>`
 })
 
-fastify.get("/presign", async (request, reply) => {
+fastify.get("/api/presign", async (request, reply) => {
   const { siteId, path } = request.query
 
   const response = await presignFile({ siteId, path })
@@ -585,7 +585,7 @@ fastify.get("/presign", async (request, reply) => {
     </body></html>`
 })
 
-fastify.get("/upload", async (request, reply) => {
+fastify.get("/api/upload", async (request, reply) => {
   const { siteId, path, presignRequestId, uploadUrl } = request.query
   const callBody = "test1\ntest2\n"
   const response = await uploadFile({
@@ -612,7 +612,7 @@ fastify.get("/upload", async (request, reply) => {
     </body></html>`
 })
 
-fastify.post("/upload", async (request, reply) => {
+fastify.post("/api/upload", async (request, reply) => {
   const file = await request.file()
   const { siteId } = request.query
 
@@ -627,7 +627,7 @@ fastify.post("/upload", async (request, reply) => {
   reply.redirect(`files?siteId=${siteId}`)
 })
 
-fastify.get("/addfile", async (request, reply) => {
+fastify.get("/api/addfile", async (request, reply) => {
   const { siteId, path, presignRequestId } = request.query
 
   const callBody = { siteId, path, presignRequestId }
@@ -655,7 +655,7 @@ fastify.get("/addfile", async (request, reply) => {
 // Start local server
 const start = async () => {
   try {
-    console.log(`Starting http://localhost:${PORT}`)
+    console.log(`Starting http://localhost:${PORT}/api`)
     await fastify.listen(PORT)
   } catch (err) {
     fastify.log.error(err)
