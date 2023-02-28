@@ -91,3 +91,31 @@ Add a file in a temporary location in site model hierarchy. API expects content-
 
 [Request schema](api/0/model/command/add/file/post/request.json)
 [Response schema](api/0/model/command/add/file/post/response.json)
+
+## MQTT endpoint
+
+XsiteManage uses to MQTT over websocket to push notifications about machine activity on a site. To start listening for the messages connect MQTT client to the endpoint and subscribe to an activity topic. Only new events will be sent to the topic. Last known location is not available.
+
+When connecting client to the endpoint, you need to pass clientId with the connection parameters.
+
+clientId should conform to: "prod-user-{userId}-{sessionId}"
+ - any string is allowed as an sessionId
+ - userId is the email of the user logged in.
+
+### wss://iot.prod.xsitemanage.com/mqtt?token={idToken}>&contextType=ext-site&contextId={siteId}
+
+## topics:subscribe
+
+Following topics are available for client to subscribe to.
+
+### prod-ext/site:{siteId}/mcc:{machineId}/status
+
+Single machine activity on a site
+
+[Response schema](schema/mqtt-subscribe.json)
+
+### prod-ext/site:{siteId}/+/status
+
+All machine activity on a site
+
+[Response schema](schema/mqtt-subscribe.json)
