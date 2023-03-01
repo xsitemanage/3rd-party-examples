@@ -15,6 +15,8 @@
     "fastify": "^3.29.4",
     "node-htmlencode": "^0.0.1",
     "nodemon": "*",
-    "querystring": "*"
+    "querystring": "*",
+    "mqtt": "4.3.7",
+    "ws": "8.12.1"
   }
 }

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["machineId, siteId, timestamp"],
+  "properties": {
+    "machineId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "siteId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "latitude": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Latitude coordinate of the position of the machine at the time of event. In WGS84"
+    },
+    "longitude": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Longitude coordinate of the position of the machine at the time of event. In WGS84"
+    },
+    "timestampMs": {
+      "type": "number",
+      "description": "Timestamp in milliseconds since epoch"
+    }
+  }
+}

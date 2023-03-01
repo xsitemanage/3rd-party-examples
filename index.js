@@ -2,6 +2,10 @@ const fastify = require("fastify")()
 const axios = require("axios").default
 const htmlencode = require("node-htmlencode")
 const { stringify } = require("querystring")
+const mqtt = require("mqtt")
+const WebSocketServer = require("ws")
+
+
 require("dotenv").config()
 
 fastify.register(require("@fastify/multipart"))
@@ -29,6 +33,11 @@ if (
 }
 // Received id token
 let idToken
+let wsClient
+const wss = new WebSocketServer.Server({port: 8080})
+wss.on("connection", ws => {
+  wsClient = ws
+})
 
 async function presignFile({ siteId, path }) {
   let response
@@ -265,6 +274,8 @@ fastify.get("/api/list", async (request, reply) => {
       <td><a href="/api/points?siteId=${site.siteId}">List points</a></td>
       <td><a href="/api/files?siteId=${site.siteId}">List files</a></td>
       <td><a href="/api/machines?siteId=${site.siteId}">List machines</a></td>
+      <td><a href="/api/status?siteId=${site.siteId}">Machine Acitvity</a></td>
+
     </tr>`
   }
 
@@ -287,6 +298,7 @@ fastify.get("/api/list", async (request, reply) => {
           <th>List points</th>
           <th>List files</th>
           <th>List machines</th>
+          <th>Machine activity</th>
         </tr>
         ${siteTableRows}
       </table>
@@ -650,6 +662,69 @@ fastify.get("/api/addfile", async (request, reply) => {
       <b>Response http status code</b>: <tt>${response.status}</tt><br>
       <b>Response data</b>: <tt>${JSON.stringify(response.data)}</tt><br>
     </body></html>`
+})
+
+fastify.get("/api/status", async (request, reply) => {
+  const { siteId } = request.query
+  const email = JSON.parse(Buffer.from(idToken?.split(".")[1], "base64").toString()).email
+
+  if (!email || !siteId) {
+    reply.type("text/html")
+
+    return `
+    <html><body>
+      <h1>Error</h1>
+      <p>unknown site: "${siteId}" or user: "${email}"</p>
+      <h2>Actions</h2>
+      <ul>
+      <li><a href="/api/list">List sites</li>
+      </ul>
+    </body></html>`
+  }
+
+
+  const mqttClient = mqtt.connect(
+    `wss://iot.prod.xsitemanage.com/mqtt?token=${idToken}&contextType=ext-site&contextId=${siteId}`,
+    { clientId: `prod-user-${email}-${Date.now()}`, protocol: "wss" }
+  )
+
+  mqttClient.subscribe(`prod-ext/site:${siteId}/+/status`)
+
+  mqttClient.on("message", (topic, message) => {
+    const messageStr = Buffer.from(message).toString()
+    wsClient.send(messageStr)
+  })
+
+  mqttClient.on("close", () => {
+    mqttClient.end(true)
+    wsClient.close()
+  })
+
+  reply.type("text/html")
+  return `
+    <html>
+      <head>
+        <script>
+          const ws = new WebSocket("ws://localhost:8080")
+          ws.addEventListener("message", event => {
+            const newMessageEl = document.createElement('li')
+            newMessageEl.innerText = event.data
+            const listEl = document.getElementsByClassName('messages')
+            listEl[0].appendChild(newMessageEl)
+          })
+        </script>
+      </head>
+      <body>
+        <h1>Success</h1>
+        <p>connected to realtime status</p>
+        <ul class="messages">
+        </ul>
+        <h2>Actions</h2>
+        <ul>
+        <li><a href="/api/list">List sites</li>
+        </ul>
+      </body>
+    </html>`
 })
 
 // Start local server
