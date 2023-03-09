@@ -161,6 +161,14 @@
                 "description": "IM code for the log point",
                 "type": "string"
               },
+              "dx": {
+                "description": "Distance to the reference object in X axis",
+                "type": "number"
+              },
+              "dy": {
+                "description": "Distance to the reference object in Y axis",
+                "type": "number"
+              },
               "dz": {
                 "description": "Height difference to the reference object",
                 "type": "number"
@@ -194,6 +202,14 @@
           },
           "siteVersion": {
             "description": "Site version (site files version) of the file which was in use when measuring this point",
+            "type": "number"
+          },
+          "status": {
+            "description": "Drill point status: EARLY, OK or UNFINISHED",
+            "type": "string"
+          },
+          "length": {
+            "description": "Depth of the drilled hole",
             "type": "number"
           }
         }

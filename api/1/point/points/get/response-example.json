@@ -116,5 +116,59 @@
     "surfaceCode": "surfaceCode",
     "timestampMs": 12345,
     "type": "OffsetLinePoint"
+  },
+  {
+    "abandoned": false,
+    "code": "code",
+    "description": "hole point description",
+    "length": 3.2,
+    "lineId": "1",
+    "localId": 6,
+    "machineId": "00000000-0000-0000-0000-111111111111",
+    "ref": {
+      "code": "refCode",
+      "dh": 1,
+      "dx": 2,
+      "dy": 3,
+      "dz": 4,
+      "filePath": "refFilePath.xml",
+      "name": "refName"
+    },
+    "remoteId": 6,
+    "sequenceId": 6,
+    "siteId": "00000000-0000-0000-0000-000000000001",
+    "status": "EARLY",
+    "timestampMs": 12345,
+    "type": "AsbuiltHolePoint",
+    "x": 123,
+    "y": 123,
+    "z": 123
+  },
+  {
+    "abandoned": false,
+    "code": "code",
+    "description": "hole point description",
+    "length": 3.2,
+    "lineId": "1",
+    "localId": 7,
+    "machineId": "00000000-0000-0000-0000-111111111111",
+    "ref": {
+      "code": "refCode",
+      "dh": 1,
+      "dx": 2,
+      "dy": 3,
+      "dz": 4,
+      "filePath": "refFilePath.xml",
+      "name": "refName"
+    },
+    "remoteId": 7,
+    "sequenceId": 7,
+    "siteId": "00000000-0000-0000-0000-000000000001",
+    "status": "EARLY",
+    "timestampMs": 23456,
+    "type": "AsbuiltHolePoint",
+    "x": 123,
+    "y": 123,
+    "z": 456
   }
 ]
