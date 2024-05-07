@@ -142,7 +142,11 @@
     "type": "AsbuiltHolePoint",
     "x": 123,
     "y": 123,
-    "z": 123
+    "z": 123,
+    "drillBitDia": 64,
+    "operatorName": "JFK",
+    "minimumDrillingLength": 6,
+    "subDrillingDepth": 0.3
   },
   {
     "abandoned": false,
@@ -169,6 +173,9 @@
     "type": "AsbuiltHolePoint",
     "x": 123,
     "y": 123,
-    "z": 456
+    "z": 117.5,
+    "operatorName": "JFK",
+    "minimumDrillingLength": 6,
+    "subDrillingDepth": 0.3
   }
 ]
