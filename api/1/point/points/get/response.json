@@ -109,20 +109,22 @@
             "type": "string",
             "description": "Object type information",
             "enum": [
-              "SurveyPoint",
-              "SurveyLinePoint",
-              "AsbuiltPoint",
               "AsbuiltLinePoint",
+              "AsbuiltPoint",
               "AsbuiltSurfacePoint",
+              "AsbuiltHolePoint",
               "ControlPoint",
-              "UserPoint",
-              "UserLinePoint",
-              "UserMeshPoint",
-              "OffsetPoint",
+              "DrillPoint",
               "OffsetLinePoint",
               "OffsetMeshPoint",
-              "UserStringLineLayer",
-              "OffsetStringLineLayer"
+              "OffsetPoint",
+              "OffsetStringLineLayer",
+              "SurveyLinePoint",
+              "SurveyPoint",
+              "UserLinePoint",
+              "UserMeshPoint",
+              "UserPoint",
+              "UserStringLineLayer"
             ],
             "example": "SurveyPoint"
           },
@@ -210,6 +212,22 @@
           },
           "length": {
             "description": "Depth of the drilled hole",
+            "type": "number"
+          },
+          "drillBitDiameter": {
+            "description": "Diameter of the drill bit in millimeters",
+            "type": "number"
+          },
+          "operatorName": {
+            "description": "Name or personal identifier of the machine operator who logged the point",
+            "type": "string"
+          },
+          "minimumDrillingLength": {
+            "description": "The minimum drilling length required for an acceptable drill hole",
+            "type": "number"
+          },
+          "subDrillingDepth": {
+            "description": "The length by which the drilling is required to exceed the final filled in rock level",
             "type": "number"
           }
         }
