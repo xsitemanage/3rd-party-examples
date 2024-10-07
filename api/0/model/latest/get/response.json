@@ -31,7 +31,7 @@
           },
           "version": {
             "type": "integer",
-            "description": "File version number. Increasing, but not necessarily continuous."
+            "description": "File version number. Increasing, but not necessarily continuous. If set, geoid always has version -2 and prm has version -1."
           },
           "timestampMs": {
             "type": "integer",

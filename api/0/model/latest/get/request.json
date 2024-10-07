@@ -15,7 +15,7 @@
           "format": "uuid"
         },
         "maxPageSize": {
-          "description": "For paging. A page will not contain more items that the given value",
+          "description": "For paging. A page will usually not contain more items than the given value. On the first page if the coordinate system is set, the geoid and prm will be there in addition to the model files. Therefore the first page with maxPageSize=1 parameter can have in total 0 to 3 items.",
           "type": "integer"
         },
         "nextToken": {
