@@ -8,7 +8,7 @@
       "minItems": 0,
       "items": {
         "type": "object",
-        "required": ["siteId", "name", "uiLongitude", "uiLatitude"],
+        "required": ["siteId", "name", "uiLongitude", "uiLatitude", "coordinateSystem"],
         "properties": {
           "siteId": {
             "type": "string",
@@ -26,6 +26,31 @@
           "uiLatitude": {
             "type": "number",
             "description": "Approximate latitude coordinate of the position of the site. For Xsite® MANAGE UI, not for measurements or machine control systems. In WGS84"
+          },
+          "coordinateSystem": {
+            "type": "object",
+            "properties": {
+              "prm": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the prm file defining the coordinate system of the site"
+                  }
+                }
+              },
+              "geoid": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the geoid file defining the height system of the site"
+                  }
+                }
+              }
+            }
           }
         }
       }
