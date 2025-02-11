@@ -17,6 +17,7 @@ const REDIRECT_URI = process.env.REDIRECT_URI
 const CALLBACK_PATH = new URL(REDIRECT_URI).pathname
 const AUTH_DOMAIN = process.env.AUTH_DOMAIN
 const MANAGE_API_DOMAIN = process.env.MANAGE_API_DOMAIN
+const API_KEY = process.env.API_KEY
 // CSRF token should not be static in production use
 const CSRF_STATE = "REPLACE_WITH_CROSS_SITE_REQUEST_FORGERY_TOKEN"
 
@@ -45,9 +46,13 @@ async function presignFile({ siteId, path }) {
 
   try {
     const axiosConfig = {
-      headers: { Authorization: idToken },
+      headers: { 
+        Authorization: idToken,
+        "x-api-key": API_KEY
+      },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
+
     }
     response = await axios.get(callUrl, axiosConfig)
 
@@ -69,7 +74,10 @@ async function uploadFile({ presignUrl, fileBuffer }) {
   try {
     const axiosConfig = {
       // No id token here, it is passed in url query parameters when uploading!
-      headers: { "Content-Type": "application/octet-stream" },
+      headers: { 
+        "Content-Type": "application/octet-stream",
+        "x-api-key": API_KEY
+       },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
       maxBodyLength: Infinity,
@@ -96,7 +104,10 @@ async function addFile({ siteId, path, presignRequestId }) {
 
   try {
     const axiosConfig = {
-      headers: { Authorization: idToken },
+      headers: { 
+        Authorization: idToken,
+        "x-api-key": API_KEY
+      },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
     }
@@ -246,7 +257,10 @@ fastify.get("/api/list", async (request, reply) => {
 
   try {
     const axiosConfig = {
-      headers: { Authorization: idToken },
+      headers: { 
+        Authorization: idToken,
+        "x-api-key": API_KEY
+      },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
     }
@@ -320,7 +334,10 @@ fastify.get("/api/machines", async (request, reply) => {
 
   try {
     const axiosConfig = {
-      headers: { Authorization: idToken },
+      headers: { 
+        Authorization: idToken,
+        "x-api-key": API_KEY
+      },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
     }
@@ -385,7 +402,10 @@ fastify.get("/api/points", async (request, reply) => {
 
   try {
     const axiosConfig = {
-      headers: { Authorization: idToken },
+      headers: { 
+        Authorization: idToken,
+        "x-api-key": API_KEY
+      },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
     }
@@ -446,7 +466,10 @@ fastify.get("/api/files", async (request, reply) => {
 
   try {
     const axiosConfig = {
-      headers: { Authorization: idToken },
+      headers: { 
+        Authorization: idToken,
+        "x-api-key": API_KEY
+      },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
     }
@@ -538,7 +561,10 @@ fastify.get("/api/download", async (request, reply) => {
   let response
   try {
     const axiosConfig = {
-      headers: { Authorization: idToken },
+      headers: { 
+        Authorization: idToken,
+        "x-api-key": API_KEY
+      },
       // Never throw, we simply want to print the response
       validateStatus: () => true,
     }
