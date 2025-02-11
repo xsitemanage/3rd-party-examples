@@ -10,7 +10,7 @@ Example code showing how Manage external access can be used.
 - The following information about Xsite® MANAGE:
   - CLIENT_ID: OAuth2 client id assigned by Xsite® MANAGE to a client using the third-party API
   - CLIENT_SECRET: Secret string associated with the client
-  - API_KEY: Unique secret key used to authenticate API requests. This must be securely stored and not shared publicly. 
+  - API_KEY: Key provided by Xsite-Manage. Should be included in request headers
 - Create file `.env` using `.env.sample` as a template. Replace example values
   with Xsite® MANAGE information listed above.
 
