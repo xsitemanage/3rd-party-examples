@@ -39,17 +39,24 @@ Please note that systems between the application and the client also produce err
 
 ### Paging
 
-API endpoints that may return a large set of results may implement paging. If there are too many results to fit in a single response, such API includes the field `nextToken` in its response. The next page is fetched by sending the received value back in a field with the same name `nextToken`.
+API endpoints that may return a large set of results may implement paging.
+If there are too many results to fit in a single response, such API includes the field `nextToken` in its response.
+The next page is fetched by sending the received value back in a field with the same name `nextToken`.
 
-Note that any endpoint listed here supporting paging may change its maximum page size in the future. Some APIs have huge page sizes (meaning no paging in effect), but the page size may be decreased in the future.
+Note that any endpoint listed here supporting paging may change its maximum page size in the future.
+Some APIs have huge page sizes (meaning no paging in effect), but the page size may be decreased in the future.
 
 ## API endpoints
 
-A note on documentation syntax: `queryStringParameters` and `body` mentioned in the request schemas refer to HTTP GET querystring parameters and request body in the other HTTP methods.
+`queryStringParameters` and `body` mentioned in the request schemas refer to HTTP GET querystring parameters and request body in the other HTTP methods.
 
 You are not expected to send property `queryStringParameters` or `body` within the request body.
 
-A note on JSON schema format: The schema of an object can include property `additionalProperties`. If not set or set to `true`, object properties that have not been defined are allowed. This means new properties can be added to the API without prior warning. If set to `false` this is not possible. Also new properties can be added to the API response without prior warning.
+The schema of an object can include property `additionalProperties`.
+If not set or set to `true`, object properties that have not been defined are allowed.
+This means new properties can be added to the API without prior warning.
+If set to `false` this is not possible.
+Also new properties can be added to the API response without prior warning.
 
 ### GET https://api.xsitemanage.com/ext/0/site/sites?nextToken={nextToken}&maxPageSize={maxPageSize}
 
@@ -69,7 +76,7 @@ Get sites machines
 
 Get log points for a site
 
-Request and response shcemas: https://xsitemanage.com/schemas/3rdparty
+Request and response schemas: https://xsitemanage.com/schemas/3rdparty
 
 ### GET https://api.xsitemanage.com/ext/0/model/latest?siteId={siteId}&nextToken={nextToken}&maxPageSize={maxPageSize}
 
@@ -94,13 +101,16 @@ Add a file in a temporary location in site model hierarchy. API expects content-
 
 ## MQTT endpoint
 
-XsiteManage uses to MQTT over websocket to push notifications about machine activity on a site. To start listening for the messages connect MQTT client to the endpoint and subscribe to an activity topic. Only new events will be sent to the topic. Last known location is not available.
+Xsite MANAGE uses to MQTT over websocket to push notifications about machine activity on a site.
+To start listening for the messages connect MQTT client to the endpoint and subscribe to an activity topic.
+Only new events will be sent to the topic.
+Last known location is not available.
 
-When connecting client to the endpoint, you need to pass clientId with the connection parameters.
+When connecting client to the endpoint, you need to pass `clientId` with the connection parameters.
 
-clientId should conform to: "prod-user-{userId}-{sessionId}"
- - any string is allowed as an sessionId
- - userId is the email of the user logged in.
+`clientId` should conform to `prod-user-{userId}-{sessionId}`
+ - any string is allowed as an `sessionId`
+ - `userId` is the email of the user logged in
 
 ### wss://iot.prod.xsitemanage.com/mqtt?token={idToken}>&contextType=ext-site&contextId={siteId}
 
