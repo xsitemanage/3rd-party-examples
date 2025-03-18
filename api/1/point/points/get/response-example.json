@@ -177,5 +177,25 @@
     "operatorName": "JFK",
     "minimumDrillingLength": 6,
     "subDrillingDepth": 0.3
+  },
+  {
+    "abandoned": false,
+    "code": "code",
+    "description": "User made hole point",
+    "groupId": "groupId",
+    "lineId": "1",
+    "localId": 8,
+    "machineId": "00000000-0000-0000-0000-111111111111",
+    "remoteId": 8,
+    "sequenceId": 8,
+    "siteId": "00000000-0000-0000-0000-000000000001",
+    "surfaceCode": "surfaceCode",
+    "timestampMs": 99999,
+    "type": "UserDrillHolePoint",
+    "x": 123,
+    "y": 123,
+    "z": 117.5,
+    "drillBitDia": 64,
+    "operatorName": "DJT"
   }
 ]

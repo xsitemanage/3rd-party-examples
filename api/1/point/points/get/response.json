@@ -124,7 +124,8 @@
               "UserLinePoint",
               "UserMeshPoint",
               "UserPoint",
-              "UserStringLineLayer"
+              "UserStringLineLayer",
+              "UserDrillHolePoint"
             ],
             "example": "SurveyPoint"
           },
