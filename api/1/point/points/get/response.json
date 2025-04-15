@@ -230,6 +230,14 @@
           "subDrillingDepth": {
             "description": "The length by which the drilling is required to exceed the final filled in rock level",
             "type": "number"
+          },
+          "azimuth:": {
+            "description": "Azimuth of drill hole in degrees, measured clockwise from the x-axis",
+            "type": "number"
+          },
+          "inclination": {
+            "description": "Inclination of drill hole in degrees, 0° representing downwards and 180° upwards",
+            "type": "number"
           }
         }
       }

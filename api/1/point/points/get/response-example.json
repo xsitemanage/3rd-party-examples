@@ -146,7 +146,9 @@
     "drillBitDia": 64,
     "operatorName": "JFK",
     "minimumDrillingLength": 6,
-    "subDrillingDepth": 0.3
+    "subDrillingDepth": 0.3,
+    "azimuth": 45,
+    "inclination": 45
   },
   {
     "abandoned": false,
@@ -176,7 +178,9 @@
     "z": 117.5,
     "operatorName": "JFK",
     "minimumDrillingLength": 6,
-    "subDrillingDepth": 0.3
+    "subDrillingDepth": 0.3,
+    "azimuth": 45,
+    "inclination": 45
   },
   {
     "abandoned": false,
