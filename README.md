@@ -69,8 +69,7 @@ Get sites machines
 
 Get log points for a site
 
-[Request schema](api/1/point/points/get/request.json)
-[Response schema](api/1/point/points/get/response.json)
+Request and response shcemas: https://xsitemanage.com/schemas/3rdparty
 
 ### GET https://api.xsitemanage.com/ext/0/model/latest?siteId={siteId}&nextToken={nextToken}&maxPageSize={maxPageSize}
 
