@@ -510,7 +510,7 @@ fastify.get("/api/files", async (request, reply) => {
   let nextPage = ""
 
   if (response.data.nextToken)
-    nextPage = `<a href="api/files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${MAX_PAGE_SIZE}">Get next page</a><br/>`
+    nextPage = `<a href="/api/files?siteId=${siteId}&nextToken=${response.data.nextToken}&maxPageSize=${MAX_PAGE_SIZE}">Get next page</a><br/>`
   reply.type("text/html")
   return `
     <html>
