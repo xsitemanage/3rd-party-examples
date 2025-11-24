@@ -9,10 +9,10 @@
   "author": "",
   "private": true,
   "dependencies": {
-    "@fastify/multipart": "^6.0.0",
+    "@fastify/multipart": "^8.3.1",
     "axios": "*",
     "dotenv": "^8.2.0",
-    "fastify": "^3.29.4",
+    "fastify": "^4.29.1",
     "node-htmlencode": "^0.0.1",
     "nodemon": "*",
     "querystring": "*",

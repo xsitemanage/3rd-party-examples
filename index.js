@@ -1,4 +1,4 @@
-const fastify = require("fastify")()
+const fastify = require("fastify")({logger: true})
 const axios = require("axios").default
 const htmlencode = require("node-htmlencode")
 const { stringify } = require("querystring")
@@ -755,12 +755,13 @@ fastify.get("/api/status", async (request, reply) => {
 
 // Start local server
 const start = async () => {
-  try {
-    console.log(`Starting http://localhost:${PORT}/api`)
-    await fastify.listen(PORT)
-  } catch (err) {
-    fastify.log.error(err)
-    process.exit(1)
-  }
+  console.log(`Starting http://localhost:${PORT}/api`)
+  await fastify.listen({port: PORT}, function (err, address) {
+    if (err) {
+      fastify.log.error(err)
+      process.exit(1)
+    }
+  })
 }
+
 start()
