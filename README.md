@@ -4,7 +4,7 @@ Example code showing how Manage external access can be used.
 
 ## Prerequisites:
 
-- Node 12 installed
+- Node 22 installed
 - Latest Chrome
 - Run `npm install`
 - The following information about Xsite® MANAGE:
