@@ -9,7 +9,7 @@ Example code showing how Manage external access can be used.
 - Run `npm install`
 - The following information about Xsite® MANAGE:
   - CLIENT_ID: OAuth2 client id assigned by Xsite® MANAGE to a client using the third-party API
-  - CLIENT_SECRET: Secret string associated with the client
+  - CLIENT_SECRET: Secret string associated with the client, if available
   - API_KEY: Key provided by Xsite® MANAGE. Should be included in request headers as "Api-Key"
 - Create file `.env` using `.env.sample` as a template. Replace example values
   with Xsite® MANAGE information listed above.
