@@ -58,41 +58,41 @@ This means new properties can be added to the API without prior warning.
 If set to `false` this is not possible.
 Also new properties can be added to the API response without prior warning.
 
-### GET https://api.xsitemanage.com/ext/0/site/sites?nextToken={nextToken}&maxPageSize={maxPageSize}
+### GET https://api.prod.xsitemanage.com/ext/0/site/sites?nextToken={nextToken}&maxPageSize={maxPageSize}
 
 Get user's sites
 
 [Request schema](api/0/site/sites/get/request.json)
 [Response schema](api/0/site/sites/get/response.json)
 
-### GET https://api.xsitemanage.com/ext/0/site/sites/machines?siteId={siteId}
+### GET https://api.prod.xsitemanage.com/ext/0/site/sites/machines?siteId={siteId}
 
 Get sites machines
 
 [Request schema](api/0/site/sites/machines/get/request.json)
 [Response schema](api/0/site/sites/machines/get/response.json)
 
-### GET https://api.xsitemanage.com/ext/1/point/points?siteId={siteId}&since={sequenceId}&nextToken={nextToken}&maxPageSize={maxPageSize}
+### GET https://api.prod.xsitemanage.com/ext/1/point/points?siteId={siteId}&since={sequenceId}&nextToken={nextToken}&maxPageSize={maxPageSize}
 
 Get log points for a site
 
 Request and response schemas: https://xsitemanage.com/schemas/3rdparty/index.html
 
-### GET https://api.xsitemanage.com/ext/0/model/latest?siteId={siteId}&nextToken={nextToken}&maxPageSize={maxPageSize}
+### GET https://api.prod.xsitemanage.com/ext/0/model/latest?siteId={siteId}&nextToken={nextToken}&maxPageSize={maxPageSize}
 
 Get site files
 
 [Request schema](api/0/model/latest/get/request.json)
 [Response schema](api/0/model/latest/get/response.json)
 
-### GET https://api.xsitemanage.com/ext/0/model/presign/file?siteId={siteId}&path={path}
+### GET https://api.prod.xsitemanage.com/ext/0/model/presign/file?siteId={siteId}&path={path}
 
 Presign path in preparation of adding it to a site. May be a new path or update of existing one.
 
 [Request schema](api/0/model/presign/get/request.json)
 [Response schema](api/0/model/presign/get/response.json)
 
-### POST https://api.xsitemanage.com/ext/0/model/command/add/file
+### POST https://api.prod.xsitemanage.com/ext/0/model/command/add/file
 
 Add a file in a temporary location in site model hierarchy. API expects content-type to be application/json
 
