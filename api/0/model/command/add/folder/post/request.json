@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["body"],
+  "properties": {
+    "body": {
+      "description": "The HTTP Request body",
+      "type": "object",
+      "required": ["siteId", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "siteId": {
+          "description": "Site id (string, uuid)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "path": {
+          "description": "Path of the added folder",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

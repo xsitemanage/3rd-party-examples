@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "description": "Log point, same object as in the items of GET /ext/1/point/points: https://xsitemanage.com/schemas/3rdparty/index.html"
+      }
+    },
+    "nextToken": {
+      "type": "string",
+      "description": "Paging token"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["siteVersion"],
+  "properties": {
+    "siteVersion": {
+      "type": "integer",
+      "description": "Version of the site's file list where the folder was added. Version is increased when files or folders are added or deleted. It is not necessarily continuous."
+    }
+  }
+}

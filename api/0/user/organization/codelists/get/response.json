@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": ["codelistId", "name"],
+        "properties": {
+          "codelistId": {
+            "type": "string",
+            "description": "Unique codelist identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the codelist"
+          }
+        }
+      }
+    }
+  }
+}
