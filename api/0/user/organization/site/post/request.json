@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["body"],
+  "properties": {
+    "body": {
+      "description": "The HTTP Request body",
+      "type": "object",
+      "required": ["name", "uiLatitude", "uiLongitude"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the created site",
+          "minLength": 5,
+          "maxLength": 30
+        },
+        "uiLatitude": {
+          "type": "number",
+          "description": "Approximate site latitude in WGS84",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "uiLongitude": {
+          "type": "number",
+          "description": "Approximate site longitude in WGS84",
+          "minimum": -180,
+          "maximum": 180
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["coordinateSystems", "heightSystems"],
+  "properties": {
+    "coordinateSystems": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/coordinateFileEntry" }
+    },
+    "heightSystems": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/coordinateFileEntry" }
+    }
+  },
+  "definitions": {
+    "coordinateFileEntry": {
+      "type": "object",
+      "required": ["name", "fileId", "size", "lastModified"],
+      "properties": {
+        "name": { "type": "string" },
+        "fileId": { "type": "string", "format": "uuid" },
+        "size": { "type": "integer" },
+        "lastModified": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

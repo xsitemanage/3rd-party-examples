@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["body"],
+  "properties": {
+    "body": {
+      "description": "The HTTP Request body",
+      "type": "object",
+      "required": ["siteId", "codelistId"],
+      "additionalProperties": false,
+      "properties": {
+        "siteId": {
+          "description": "Site id (string, uuid)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "codelistId": {
+          "description": "Codelist id",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  }
+}
