@@ -15,12 +15,13 @@
   "definitions": {
     "coordinateFileEntry": {
       "type": "object",
-      "required": ["name", "fileId", "size", "lastModified"],
+      "required": ["name", "fileId", "size", "lastModified", "source"],
       "properties": {
         "name": { "type": "string" },
         "fileId": { "type": "string", "format": "uuid" },
         "size": { "type": "integer" },
-        "lastModified": { "type": "string", "format": "date-time" }
+        "lastModified": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "enum": ["region", "organization"] }
       }
     }
   }
