@@ -95,7 +95,7 @@ Add an existing home organization codelist to a site. API expects content-type t
 
 ### GET https://api.prod.xsitemanage.com/ext/0/user/organization/coordinatefiles
 
-Get coordinate files available in the user's home organization
+Get coordinate files available in the user's home organization: the standard coordinate and height systems of the organization's region, followed by the organization's own files. Each entry's `source` is `region` or `organization`; the same name can appear in both.
 
 [Request schema](api/0/user/organization/coordinatefiles/get/request.json)
 [Response schema](api/0/user/organization/coordinatefiles/get/response.json)
@@ -111,7 +111,7 @@ The uploaded file then appears in the coordinate file listing; empty files are n
 
 ### POST https://api.prod.xsitemanage.com/ext/0/user/organization/site/coordinatefile
 
-Add an existing home organization coordinate file to a site. API expects content-type to be application/json. The user must be an admin of the site, and the site must belong to the user's home organization.
+Add a coordinate file listed by the coordinate file listing, from the home organization or its region, to a site. API expects content-type to be application/json. The user must be an admin of the site, and the site must belong to the user's home organization.
 
 [Request schema](api/0/user/organization/site/coordinatefile/post/request.json)
 [Response schema](api/0/user/organization/site/coordinatefile/post/response.json)

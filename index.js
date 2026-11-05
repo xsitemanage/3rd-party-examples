@@ -725,7 +725,7 @@ async function renderOrganizationResourcesPage(
         <td>${htmlText(resource[resourceIdName])}</td>
         ${isCodelist ? "" : `<td>${htmlText(resource.type)}</td>`}
         <td>${htmlText(resource.name)}</td>
-        ${isCodelist ? "" : `<td>${htmlText(resource.size)}</td><td>${htmlText(resource.lastModified)}</td>`}
+        ${isCodelist ? "" : `<td>${htmlText(resource.source)}</td><td>${htmlText(resource.size)}</td><td>${htmlText(resource.lastModified)}</td>`}
       </tr>`,
     )
     .join("")
@@ -765,7 +765,7 @@ async function renderOrganizationResourcesPage(
           <th>Id</th>
           ${isCodelist ? "" : "<th>Type</th>"}
           <th>Name</th>
-          ${isCodelist ? "" : "<th>Size</th><th>Last modified</th>"}
+          ${isCodelist ? "" : "<th>Source</th><th>Size</th><th>Last modified</th>"}
         </tr></thead>
         <tbody>${resourceRows}</tbody>
       </table>
