@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": [
+          "machineId",
+          "dbsn",
+          "name",
+          "generation",
+          "cloudLicense",
+          "organizationId",
+          "organizationName",
+          "latitude",
+          "longitude",
+          "positionTs",
+          "lastSeenTs"
+        ],
+        "properties": {
+          "machineId": {
+            "type": "string",
+            "description": "Unique machine identifier within Xsite® MANAGE"
+          },
+          "dbsn": {
+            "type": "string",
+            "description": "Serial number of the machine's control system"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the machine"
+          },
+          "generation": {
+            "type": "string",
+            "enum": ["xappln", "xsite3d"],
+            "description": "Machine control system generation"
+          },
+          "cloudLicense": {
+            "type": "string",
+            "enum": ["pro", "starter"],
+            "description": "Cloud license level of the machine"
+          },
+          "machineLicense": {
+            "type": "string",
+            "description": "Name of the machine's active Xsite 3D excavator license option. Absent without one"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Home organization of the machine"
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "Name of the home organization"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latest known latitude of the machine. In WGS84"
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Latest known longitude of the machine. In WGS84"
+          },
+          "positionTs": {
+            "type": "integer",
+            "description": "Time of the position, epoch milliseconds"
+          },
+          "lastSeenTs": {
+            "type": "integer",
+            "description": "Time the machine was last seen, epoch milliseconds"
+          },
+          "site": {
+            "type": "object",
+            "description": "Active site of the machine. Absent if it has none",
+            "required": ["siteId", "name"],
+            "properties": {
+              "siteId": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique site identifier within Xsite® MANAGE"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the site"
+              }
+            }
+          }
+        }
+      }
+    },
+    "nextToken": {
+      "type": "string",
+      "description": "Paging token. A page may be empty while nextToken is set; keep fetching until it is absent"
+    }
+  }
+}

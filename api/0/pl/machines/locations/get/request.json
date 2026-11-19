@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["queryStringParameters"],
+  "properties": {
+    "queryStringParameters": {
+      "description": "The HTTP Query String Parameters in the URL",
+      "type": "object",
+      "required": ["permissionLevel", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "permissionLevel": {
+          "description": "The level the user's role is held at. The user must be a system admin for system, a member of the distributor for distributor, or a member of the region (directly or through its distributor) for region",
+          "type": "string",
+          "enum": ["system", "distributor", "region"]
+        },
+        "id": {
+          "description": "System id 00000000-0000-4000-0000-000000000001 for permissionLevel system, otherwise the distributor or region id",
+          "type": "string",
+          "format": "uuid"
+        },
+        "maxPageSize": {
+          "description": "For paging. Counts organizations, not machines: a page holds the machines of at most this many organizations. Default 200, at most 1000",
+          "type": "integer"
+        },
+        "nextToken": {
+          "description": "For paging. Only used if given by an API response",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

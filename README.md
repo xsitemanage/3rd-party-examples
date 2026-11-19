@@ -123,6 +123,14 @@ Get sites machines
 [Request schema](api/0/site/sites/machines/get/request.json)
 [Response schema](api/0/site/sites/machines/get/response.json)
 
+### GET https://api.prod.xsitemanage.com/ext/0/pl/machines/locations?permissionLevel={permissionLevel}&id={id}&nextToken={nextToken}&maxPageSize={maxPageSize}
+
+Get the latest known locations of the machines the user's system admin, distributor or region role covers.
+A user without the role at the given level gets 403.
+
+[Request schema](api/0/pl/machines/locations/get/request.json)
+[Response schema](api/0/pl/machines/locations/get/response.json)
+
 ### GET https://api.prod.xsitemanage.com/ext/1/point/points?siteId={siteId}&since={sequenceId}&nextToken={nextToken}&maxPageSize={maxPageSize}
 
 Get log points for a site
